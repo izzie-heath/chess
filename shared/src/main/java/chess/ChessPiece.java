@@ -46,9 +46,7 @@ public class ChessPiece {
     public PieceType getPieceType() {
         return type;
     }
-
-
-
+    
     public Collection<ChessMove> bishopMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece piece = board.getPiece(myPosition);
         ArrayList<ChessMove> moves = new ArrayList<>();
@@ -57,67 +55,95 @@ public class ChessPiece {
         int r = myPosition.getRow() + 1;
         int c = myPosition.getColumn() + 1;
         while (new ChessPosition(r, c).inBounds() && !otherPieceFound) {
-            if (board.getPiece(new ChessPosition(r, c)) == null) {
-                moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
-            } else {
-                if(board.getPiece(new ChessPosition(r, c)).pieceColor != piece.pieceColor){
-                    moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
-                }
-                otherPieceFound = true;
-            }
+            otherPieceFound = isOtherPieceFound(board, myPosition, r, c, moves, piece, otherPieceFound);
             r = r + 1;
             c = c + 1;
         }
-
         otherPieceFound = false;
         r = myPosition.getRow() + 1;
         c = myPosition.getColumn() - 1;
         while (new ChessPosition(r, c).inBounds() && !otherPieceFound) {
-            if (board.getPiece(new ChessPosition(r, c)) == null) {
-                moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
-            } else {
-                if(board.getPiece(new ChessPosition(r, c)).pieceColor != piece.pieceColor){
-                    moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
-                }
-                otherPieceFound = true;
-            }
+            otherPieceFound = isOtherPieceFound(board, myPosition, r, c, moves, piece, otherPieceFound);
             r = r + 1;
             c = c - 1;
         }
-
         otherPieceFound = false;
         r = myPosition.getRow() - 1;
         c = myPosition.getColumn() + 1;
         while (new ChessPosition(r, c).inBounds() && !otherPieceFound) {
-            if (board.getPiece(new ChessPosition(r, c)) == null) {
-                moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
-            } else {
-                if(board.getPiece(new ChessPosition(r, c)).pieceColor != piece.pieceColor){
-                    moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
-                }
-                otherPieceFound = true;
-            }
+            otherPieceFound = isOtherPieceFound(board, myPosition, r, c, moves, piece, otherPieceFound);
             r = r - 1;
             c = c + 1;
         }
-
         otherPieceFound = false;
         r = myPosition.getRow() - 1;
         c = myPosition.getColumn() - 1;
         while (new ChessPosition(r, c).inBounds() && !otherPieceFound) {
-            if (board.getPiece(new ChessPosition(r, c)) == null) {
-                moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
-            } else {
-                if(board.getPiece(new ChessPosition(r, c)).pieceColor != piece.pieceColor){
-                    moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
-                }
-                otherPieceFound = true;
-            }
+            otherPieceFound = isOtherPieceFound(board, myPosition, r, c, moves, piece, otherPieceFound);
             r = r - 1;
             c = c - 1;
         }
 
         return moves;
+    }
+
+    public Collection<ChessMove> rookMoves(ChessBoard board, ChessPosition myPosition) {
+        ChessPiece piece = board.getPiece(myPosition);
+        ArrayList<ChessMove> moves = new ArrayList<>();
+
+        boolean otherPieceFound = false;
+        int r = myPosition.getRow() + 1;
+        int c = myPosition.getColumn();
+        while (new ChessPosition(r, c).inBounds() && !otherPieceFound) {
+            otherPieceFound = isOtherPieceFound(board, myPosition, r, c, moves, piece, otherPieceFound);
+            r = r + 1;
+        }
+        otherPieceFound = false;
+        r = myPosition.getRow() - 1;
+        c = myPosition.getColumn();
+        while (new ChessPosition(r, c).inBounds() && !otherPieceFound) {
+            otherPieceFound = isOtherPieceFound(board, myPosition, r, c, moves, piece, otherPieceFound);
+            r = r - 1;
+        }
+        otherPieceFound = false;
+        r = myPosition.getRow();
+        c = myPosition.getColumn() + 1;
+        while (new ChessPosition(r, c).inBounds() && !otherPieceFound) {
+            otherPieceFound = isOtherPieceFound(board, myPosition, r, c, moves, piece, otherPieceFound);
+            c = c + 1;
+        }
+        otherPieceFound = false;
+        r = myPosition.getRow();
+        c = myPosition.getColumn() - 1;
+        while (new ChessPosition(r, c).inBounds() && !otherPieceFound) {
+            otherPieceFound = isOtherPieceFound(board, myPosition, r, c, moves, piece, otherPieceFound);
+            r = r;
+            c = c - 1;
+        }
+
+        return moves;
+    }
+
+    public Collection<ChessMove> queenMoves(ChessBoard board, ChessPosition myPosition){
+        ChessPiece piece = board.getPiece(myPosition);
+        ArrayList<ChessMove> moves = new ArrayList<>();
+
+        moves.addAll(bishopMoves(board, myPosition));
+        moves.addAll(rookMoves(board, myPosition));
+
+        return moves;
+    }
+
+    private static boolean isOtherPieceFound(ChessBoard board, ChessPosition myPosition, int r, int c, ArrayList<ChessMove> moves, ChessPiece piece, boolean otherPieceFound) {
+        if (board.getPiece(new ChessPosition(r, c)) == null) {
+            moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
+        } else {
+            if(board.getPiece(new ChessPosition(r, c)).pieceColor != piece.pieceColor){
+                moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
+            }
+            otherPieceFound = true;
+        }
+        return otherPieceFound;
     }
 
     /**
@@ -129,8 +155,14 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece piece = board.getPiece(myPosition);
-        if (piece.getPieceType() == PieceType.BISHOP) {
+        if(piece.getPieceType() == PieceType.BISHOP) {
             return bishopMoves(board, myPosition);
+        }
+        if(piece.getPieceType() ==  PieceType.ROOK) {
+            return rookMoves(board, myPosition);
+        }
+        if(piece.getPieceType() == PieceType.QUEEN){
+            return queenMoves(board, myPosition);
         }
         return null;
     }
