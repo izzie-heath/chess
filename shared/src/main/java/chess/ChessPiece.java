@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.List;
@@ -46,6 +47,79 @@ public class ChessPiece {
         return type;
     }
 
+
+
+    public Collection<ChessMove> bishopMoves(ChessBoard board, ChessPosition myPosition) {
+        ChessPiece piece = board.getPiece(myPosition);
+        ArrayList<ChessMove> moves = new ArrayList<>();
+
+        boolean otherPieceFound = false;
+        int r = myPosition.getRow() + 1;
+        int c = myPosition.getColumn() + 1;
+        while (new ChessPosition(r, c).inBounds() && !otherPieceFound) {
+            if (board.getPiece(new ChessPosition(r, c)) == null) {
+                moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
+            } else {
+                if(board.getPiece(new ChessPosition(r, c)).pieceColor != piece.pieceColor){
+                    moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
+                }
+                otherPieceFound = true;
+            }
+            r = r + 1;
+            c = c + 1;
+        }
+
+        otherPieceFound = false;
+        r = myPosition.getRow() + 1;
+        c = myPosition.getColumn() - 1;
+        while (new ChessPosition(r, c).inBounds() && !otherPieceFound) {
+            if (board.getPiece(new ChessPosition(r, c)) == null) {
+                moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
+            } else {
+                if(board.getPiece(new ChessPosition(r, c)).pieceColor != piece.pieceColor){
+                    moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
+                }
+                otherPieceFound = true;
+            }
+            r = r + 1;
+            c = c - 1;
+        }
+
+        otherPieceFound = false;
+        r = myPosition.getRow() - 1;
+        c = myPosition.getColumn() + 1;
+        while (new ChessPosition(r, c).inBounds() && !otherPieceFound) {
+            if (board.getPiece(new ChessPosition(r, c)) == null) {
+                moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
+            } else {
+                if(board.getPiece(new ChessPosition(r, c)).pieceColor != piece.pieceColor){
+                    moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
+                }
+                otherPieceFound = true;
+            }
+            r = r - 1;
+            c = c + 1;
+        }
+
+        otherPieceFound = false;
+        r = myPosition.getRow() - 1;
+        c = myPosition.getColumn() - 1;
+        while (new ChessPosition(r, c).inBounds() && !otherPieceFound) {
+            if (board.getPiece(new ChessPosition(r, c)) == null) {
+                moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
+            } else {
+                if(board.getPiece(new ChessPosition(r, c)).pieceColor != piece.pieceColor){
+                    moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
+                }
+                otherPieceFound = true;
+            }
+            r = r - 1;
+            c = c - 1;
+        }
+
+        return moves;
+    }
+
     /**
      * Calculates all the positions a chess piece can move to
      * Does not take into account moves that are illegal due to leaving the king in
@@ -56,10 +130,9 @@ public class ChessPiece {
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece piece = board.getPiece(myPosition);
         if (piece.getPieceType() == PieceType.BISHOP) {
-            return List.of(new ChessMove(new ChessPosition(5, 4), new ChessPosition(1, 8), null));
-
+            return bishopMoves(board, myPosition);
         }
-        return List.of();
+        return null;
     }
 
     @Override
