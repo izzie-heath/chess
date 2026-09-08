@@ -124,7 +124,7 @@ public class ChessPiece {
         return moves;
     }
 
-    public Collection<ChessMove> queenMoves(ChessBoard board, ChessPosition myPosition){
+    public Collection<ChessMove> queenMoves(ChessBoard board, ChessPosition myPosition) {
         ChessPiece piece = board.getPiece(myPosition);
         ArrayList<ChessMove> moves = new ArrayList<>();
 
@@ -133,6 +133,23 @@ public class ChessPiece {
 
         return moves;
     }
+
+    public Collection<ChessMove> kingMoves(ChessBoard board, ChessPosition myPosition) {
+        int[][] directions = {{1, 1}, {-1, 1}, {1, -1}, {-1, -1}, {1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+        ChessPiece piece = board.getPiece(myPosition);
+        ArrayList<ChessMove> moves = new ArrayList<>();
+        boolean otherPieceFound = false;
+
+        for (int i = 0; i < directions.length; i++) {
+            int r = myPosition.getRow() + directions[i][0];
+            int c = myPosition.getColumn() + directions[i][1];
+            if(new ChessPosition(r,c).inBounds()){
+                otherPieceFound = isOtherPieceFound(board, myPosition, r, c, moves, piece, otherPieceFound);
+            }
+        }
+        return moves;
+    }
+
 
     private static boolean isOtherPieceFound(ChessBoard board, ChessPosition myPosition, int r, int c, ArrayList<ChessMove> moves, ChessPiece piece, boolean otherPieceFound) {
         if (board.getPiece(new ChessPosition(r, c)) == null) {
@@ -163,6 +180,9 @@ public class ChessPiece {
         }
         if(piece.getPieceType() == PieceType.QUEEN){
             return queenMoves(board, myPosition);
+        }
+        if(piece.getPieceType() == PieceType.KING){
+            return kingMoves(board, myPosition);
         }
         return null;
     }
