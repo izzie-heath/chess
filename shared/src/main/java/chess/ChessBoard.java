@@ -11,10 +11,15 @@ import java.util.Objects;
  */
 public class ChessBoard {
 
-    private ChessPiece[][] board = new ChessPiece[8][8];
+    private ChessPiece[][] board;
 
     public ChessBoard() {
 
+        board = new ChessPiece[8][8];
+    }
+
+    public ChessPiece[][] getBoard() {
+        return board;
     }
 
     /**
@@ -91,5 +96,29 @@ public class ChessBoard {
     @Override
     public int hashCode() {
         return Arrays.deepHashCode(board);
+    }
+
+    @Override
+    public String toString() {
+        String s = "[";
+        for(int i=0; i<board.length; i++){
+            s += "\n[";
+            for(int j=0; j<board[i].length; j++){
+                if(board[i][j] == null){
+                    s += "null, ";
+                } else {
+                    s += board[i][j].getPieceType() + ", ";
+                }
+            }
+            s += "], ";
+        }
+        s += "\n]";
+        return s;
+    }
+
+    public static void main(String[] args) {
+        ChessBoard b = new ChessBoard();
+        b.resetBoard();
+        System.out.println(b.toString());
     }
 }
