@@ -150,8 +150,24 @@ public class ChessPiece {
         return moves;
     }
 
+    public Collection<ChessMove> knightMoves(ChessBoard board, ChessPosition myPosition) {
+        int[][] directions = {{1, 2}, {-1, 2}, {1, -2}, {-1, -2}, {2, 1}, {-2, 1}, {2, -1}, {-2, -1}};
+        ChessPiece piece = board.getPiece(myPosition);
+        ArrayList<ChessMove> moves = new ArrayList<>();
+        boolean otherPieceFound = false;
 
-    private static boolean isOtherPieceFound(ChessBoard board, ChessPosition myPosition, int r, int c, ArrayList<ChessMove> moves, ChessPiece piece, boolean otherPieceFound) {
+        for (int i = 0; i < directions.length; i++) {
+            int r = myPosition.getRow() + directions[i][0];
+            int c = myPosition.getColumn() + directions[i][1];
+            if(new ChessPosition(r,c).inBounds()){
+                otherPieceFound = isOtherPieceFound(board, myPosition, r, c, moves, piece, otherPieceFound);
+            }
+        }
+        return moves;
+    }
+
+
+    public static boolean isOtherPieceFound(ChessBoard board, ChessPosition myPosition, int r, int c, ArrayList<ChessMove> moves, ChessPiece piece, boolean otherPieceFound) {
         if (board.getPiece(new ChessPosition(r, c)) == null) {
             moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
         } else {
@@ -183,6 +199,9 @@ public class ChessPiece {
         }
         if(piece.getPieceType() == PieceType.KING){
             return kingMoves(board, myPosition);
+        }
+        if(piece.getPieceType() == PieceType.KNIGHT){
+            return knightMoves(board, myPosition);
         }
         return null;
     }
