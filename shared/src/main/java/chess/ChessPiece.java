@@ -173,34 +173,39 @@ public class ChessPiece {
         ArrayList<ChessMove> moves = new ArrayList<>();
         boolean otherPieceFound = false;
         int direction = 1;
-
-        if(piece.pieceColor == ChessGame.TeamColor.WHITE){
-            if(myPosition.getRow() == 2){
-                if(board.getPiece(new ChessPosition(r + 2,  c + 2)) == null){
-                    moves.add(new ChessMove(myPosition, new ChessPosition(r + 2, c + 2), null));
-                }
-            }
-        }
+        int promotionRow = 8;
+        int startRow = 2;
 
         if(piece.pieceColor == ChessGame.TeamColor.BLACK){
             direction = -1;
-            if(myPosition.getRow() == 7){
-                if(board.getPiece(new ChessPosition(r - 2,  c - 2)) == null){
-                    moves.add(new ChessMove(myPosition, new ChessPosition(r - 2, c - 2), null));
-                }
+            promotionRow = 1;
+            startRow = 7;
+        }
+
+        if(r + direction == promotionRow){
+            if(new ChessPosition(r + direction, c).inBounds() && (board.getPiece(new ChessPosition(r + direction,  c)) == null || board.getPiece(new ChessPosition(r + direction,  c)).pieceColor != pieceColor)){
+                addPromotionPieces(myPosition, r + direction, c, moves);
+            }
+            if(new ChessPosition(r + direction, c + 1).inBounds() && board.getPiece(new ChessPosition(r + direction,  c + 1)) != null && board.getPiece(new ChessPosition(r + direction,  c + 1)).pieceColor != pieceColor){
+                addPromotionPieces(myPosition, r + direction, c + 1, moves);
+                moves.add(new ChessMove(myPosition, new ChessPosition(r + direction, c + 1), ChessPiece.PieceType.BISHOP));
+            }
+            if(new ChessPosition(r + direction, c - 1).inBounds() && board.getPiece(new ChessPosition(r + direction,  c - 1)) != null && board.getPiece(new ChessPosition(r + direction,  c - 1)).pieceColor != pieceColor){
+                addPromotionPieces(myPosition, r + direction, c - 1, moves);
+            }
+        } else {
+            if(new ChessPosition(r + direction, c).inBounds() && board.getPiece(new ChessPosition(r + direction,  c)) == null){
+                moves.add(new ChessMove(myPosition, new ChessPosition(r + direction, c), null));
+            }
+            if(new ChessPosition(r + direction, c + 1).inBounds() && board.getPiece(new ChessPosition(r + direction,  c + 1)) != null && board.getPiece(new ChessPosition(r + direction,  c + 1)).pieceColor != piece.pieceColor){
+                moves.add(new ChessMove(myPosition, new ChessPosition(r + direction, c + 1), null));
+            }
+            if(new ChessPosition(r + direction, c - 1).inBounds() && board.getPiece(new ChessPosition(r + direction,  c - 1)) != null && board.getPiece(new ChessPosition(r + direction,  c - 1)).pieceColor != piece.pieceColor){
+                moves.add(new ChessMove(myPosition, new ChessPosition(r + direction, c - 1), null));
             }
         }
-
-        if(new ChessPosition(r + direction, c).inBounds() && board.getPiece(new ChessPosition(r + direction,  c)) == null){
-            moves.add(new ChessMove(myPosition, new ChessPosition(r + direction, c), null));
-        }
-
-        if(new ChessPosition(r + direction, c + direction).inBounds() && board.getPiece(new ChessPosition(r + direction,  c + direction)) != null && board.getPiece(new ChessPosition(r + direction,  c + direction)).pieceColor != piece.pieceColor){
-            moves.add(new ChessMove(myPosition, new ChessPosition(r + direction, c + direction), null));
-        }
-
-        if(new ChessPosition(r + direction, c - direction).inBounds() && board.getPiece(new ChessPosition(r + direction,  c - direction)) != null && board.getPiece(new ChessPosition(r + direction,  c - direction)).pieceColor != piece.pieceColor){
-            moves.add(new ChessMove(myPosition, new ChessPosition(r + direction, c - direction), null));
+        if(r == startRow && board.getPiece(new ChessPosition(r + (direction * 2),  c)) == null && board.getPiece(new ChessPosition(r + direction, c)) == null) {
+            moves.add(new ChessMove(myPosition, new ChessPosition(r + (direction * 2), c), null));
         }
 
         return moves;
@@ -217,6 +222,13 @@ public class ChessPiece {
             otherPieceFound = true;
         }
         return otherPieceFound;
+    }
+
+    public static void addPromotionPieces(ChessPosition myPosition, int r, int c, ArrayList<ChessMove> moves){
+        moves.add(new ChessMove(myPosition, new ChessPosition(r, c), ChessPiece.PieceType.BISHOP));
+        moves.add(new ChessMove(myPosition, new ChessPosition(r, c), ChessPiece.PieceType.ROOK));
+        moves.add(new ChessMove(myPosition, new ChessPosition(r, c), ChessPiece.PieceType.QUEEN));
+        moves.add(new ChessMove(myPosition, new ChessPosition(r, c), ChessPiece.PieceType.KNIGHT));
     }
 
     /**
