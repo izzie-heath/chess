@@ -166,6 +166,46 @@ public class ChessPiece {
         return moves;
     }
 
+    public Collection<ChessMove> pawnMoves(ChessBoard board, ChessPosition myPosition) {
+        ChessPiece piece = board.getPiece(myPosition);
+        int r = myPosition.getRow();
+        int c = myPosition.getColumn();
+        ArrayList<ChessMove> moves = new ArrayList<>();
+        boolean otherPieceFound = false;
+        int direction = 1;
+
+        if(piece.pieceColor == ChessGame.TeamColor.WHITE){
+            if(myPosition.getRow() == 2){
+                if(board.getPiece(new ChessPosition(r + 2,  c + 2)) == null){
+                    moves.add(new ChessMove(myPosition, new ChessPosition(r + 2, c + 2), null));
+                }
+            }
+        }
+
+        if(piece.pieceColor == ChessGame.TeamColor.BLACK){
+            direction = -1;
+            if(myPosition.getRow() == 7){
+                if(board.getPiece(new ChessPosition(r - 2,  c - 2)) == null){
+                    moves.add(new ChessMove(myPosition, new ChessPosition(r - 2, c - 2), null));
+                }
+            }
+        }
+
+        if(new ChessPosition(r + direction, c).inBounds() && board.getPiece(new ChessPosition(r + direction,  c)) == null){
+            moves.add(new ChessMove(myPosition, new ChessPosition(r + direction, c), null));
+        }
+
+        if(new ChessPosition(r + direction, c + direction).inBounds() && board.getPiece(new ChessPosition(r + direction,  c + direction)) != null && board.getPiece(new ChessPosition(r + direction,  c + direction)).pieceColor != piece.pieceColor){
+            moves.add(new ChessMove(myPosition, new ChessPosition(r + direction, c + direction), null));
+        }
+
+        if(new ChessPosition(r + direction, c - direction).inBounds() && board.getPiece(new ChessPosition(r + direction,  c - direction)) != null && board.getPiece(new ChessPosition(r + direction,  c - direction)).pieceColor != piece.pieceColor){
+            moves.add(new ChessMove(myPosition, new ChessPosition(r + direction, c - direction), null));
+        }
+
+        return moves;
+    }
+
 
     public static boolean isOtherPieceFound(ChessBoard board, ChessPosition myPosition, int r, int c, ArrayList<ChessMove> moves, ChessPiece piece, boolean otherPieceFound) {
         if (board.getPiece(new ChessPosition(r, c)) == null) {
@@ -202,6 +242,9 @@ public class ChessPiece {
         }
         if(piece.getPieceType() == PieceType.KNIGHT){
             return knightMoves(board, myPosition);
+        }
+        if(piece.getPieceType() == PieceType.PAWN){
+            return pawnMoves(board, myPosition);
         }
         return null;
     }
