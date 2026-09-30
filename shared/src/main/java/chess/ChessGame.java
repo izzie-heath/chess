@@ -51,7 +51,22 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        throw new RuntimeException("Not implemented");
+        ChessPiece piece = board.getPiece(startPosition);
+        Collection<ChessMove> pieceMoves = piece.pieceMoves(board, startPosition);
+        ArrayList<ChessMove> validMoves = new ArrayList<>();
+
+        for(ChessMove move : pieceMoves){
+            ChessBoard boardCopy = copyBoard(board);
+            ChessBoard boardOriginal = board;
+            boardCopy.addPiece(move.getStartPosition(), null);
+            boardCopy.addPiece(move.getEndPosition(), piece);
+            setBoard(boardCopy);
+            if(! isInCheck(piece.getTeamColor())){
+                validMoves.add(move);
+            }
+            setBoard(boardOriginal);
+        }
+        return validMoves;
     }
 
     /**
@@ -104,7 +119,20 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        ArrayList<ChessMove> teamMoves = new ArrayList<>();
+
+        if(! isInCheck(teamColor)) {
+            return false;
+        }
+
+        for(int r=1; r<=8; r++){
+            for(int c=1; c<=8; c++){
+                if(board.getPiece(new ChessPosition(r,c)) != null && board.getPiece(new ChessPosition(r,c)).getTeamColor() == teamColor){
+                    teamMoves.addAll(new ChessPiece(teamColor, board.getPiece(new ChessPosition(r,c)).getPieceType()).pieceMoves(board, new ChessPosition(r,c)));
+                }
+            }
+        }
+        return "not finsihed";
     }
 
     /**
@@ -145,6 +173,18 @@ public class ChessGame {
             }
         }
         return null;
+    }
+
+    public ChessBoard copyBoard(ChessBoard board) {
+        ChessBoard newBoard = new ChessBoard();
+        for (int r=1; r<=8; r++) {
+            for (int c=1; c<=8; c++) {
+                if (board.getPiece(new ChessPosition(r, c)) != null) {
+                    newBoard.addPiece(new ChessPosition(r, c), board.getPiece(new ChessPosition(r, c)));
+                }
+            }
+        }
+        return newBoard;
     }
 
     @Override
