@@ -17,6 +17,7 @@ public class ChessGame {
     public ChessGame() {
         this.turn = TeamColor.WHITE;
         board = new ChessBoard();
+        board.resetBoard();
     }
 
     /**
@@ -76,7 +77,19 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        System.out.println(board.toString());
+        if(board.getPiece(move.getStartPosition()) == null){
+            throw new InvalidMoveException("No starting piece found");
+        }
+        if(board.getPiece(move.getStartPosition()).getTeamColor() != turn){
+            throw new InvalidMoveException("Not your turn");
+        }
+        if(! validMoves(move.getStartPosition()).contains(move)){
+            throw new InvalidMoveException("Invalid move");
+        }
+
+        board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
+        board.addPiece(move.getStartPosition(), null);
     }
 
     /**
@@ -119,21 +132,22 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-        ArrayList<ChessMove> teamMoves = new ArrayList<>();
-
-        if(! isInCheck(teamColor)) {
-            return false;
+//        ArrayList<ChessMove> teamMoves = new ArrayList<>();
+//
+//        if(! isInCheck(teamColor)) {
+//            return false;
+//        }
+//
+//        for(int r=1; r<=8; r++){
+//            for(int c=1; c<=8; c++){
+//                if(board.getPiece(new ChessPosition(r,c)) != null && board.getPiece(new ChessPosition(r,c)).getTeamColor() == teamColor){
+//                    teamMoves.addAll(new ChessPiece(teamColor, board.getPiece(new ChessPosition(r,c)).getPieceType()).pieceMoves(board, new ChessPosition(r,c)));
+//                }
+//            }
+//        }
+//        return "not finsihed";
+        throw new RuntimeException("Not implemented");
         }
-
-        for(int r=1; r<=8; r++){
-            for(int c=1; c<=8; c++){
-                if(board.getPiece(new ChessPosition(r,c)) != null && board.getPiece(new ChessPosition(r,c)).getTeamColor() == teamColor){
-                    teamMoves.addAll(new ChessPiece(teamColor, board.getPiece(new ChessPosition(r,c)).getPieceType()).pieceMoves(board, new ChessPosition(r,c)));
-                }
-            }
-        }
-        return "not finsihed";
-    }
 
     /**
      * Determines if the given team is in stalemate, which here is defined as having
