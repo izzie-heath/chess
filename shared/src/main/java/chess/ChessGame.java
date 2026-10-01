@@ -77,7 +77,6 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        System.out.println(board.toString());
         if(board.getPiece(move.getStartPosition()) == null){
             throw new InvalidMoveException("No starting piece found");
         }
@@ -88,8 +87,19 @@ public class ChessGame {
             throw new InvalidMoveException("Invalid move");
         }
 
-        board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
+        if(move.getPromotionPiece() != null){
+            board.addPiece(move.getEndPosition(), new ChessPiece(board.getPiece(move.getStartPosition()).getTeamColor(), move.getPromotionPiece()));
+        } else {
+            board.addPiece(move.getEndPosition(), board.getPiece(move.getStartPosition()));
+        }
         board.addPiece(move.getStartPosition(), null);
+
+        if(board.getPiece(move.getEndPosition()).getTeamColor() == TeamColor.WHITE){
+            setTeamTurn(TeamColor.BLACK);
+        } else {
+            setTeamTurn(TeamColor.WHITE);
+        }
+
     }
 
     /**
@@ -117,7 +127,7 @@ public class ChessGame {
         }
 
         for(ChessMove move : enemyMoves){
-            if(move.getEndPosition() == kingPosition){
+            if(move.getEndPosition().equals(kingPosition)){
                 return true;
             }
         }
@@ -181,7 +191,7 @@ public class ChessGame {
     public ChessPosition getTeamsKingPosition(TeamColor teamColor){
         for(int r=1; r<=8; r++){
             for(int c=1; c<=8; c++){
-                if(board.getPiece(new ChessPosition(r,c)) != null && board.getPiece(new ChessPosition(r,c)).getTeamColor() != teamColor && board.getPiece(new ChessPosition(r,c)).getPieceType() == ChessPiece.PieceType.KING){
+                if(board.getPiece(new ChessPosition(r,c)) != null && board.getPiece(new ChessPosition(r,c)).getTeamColor() == teamColor && board.getPiece(new ChessPosition(r,c)).getPieceType() == ChessPiece.PieceType.KING){
                     return new ChessPosition(r,c);
                 }
             }
