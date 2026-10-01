@@ -142,22 +142,23 @@ public class ChessGame {
      * @return True if the specified team is in checkmate
      */
     public boolean isInCheckmate(TeamColor teamColor) {
-//        ArrayList<ChessMove> teamMoves = new ArrayList<>();
-//
-//        if(! isInCheck(teamColor)) {
-//            return false;
-//        }
-//
-//        for(int r=1; r<=8; r++){
-//            for(int c=1; c<=8; c++){
-//                if(board.getPiece(new ChessPosition(r,c)) != null && board.getPiece(new ChessPosition(r,c)).getTeamColor() == teamColor){
-//                    teamMoves.addAll(new ChessPiece(teamColor, board.getPiece(new ChessPosition(r,c)).getPieceType()).pieceMoves(board, new ChessPosition(r,c)));
-//                }
-//            }
-//        }
-//        return "not finsihed";
-        throw new RuntimeException("Not implemented");
+        ArrayList<ChessMove> teamMoves = new ArrayList<>();
+
+        for(int r=1; r<=8; r++){
+            for(int c=1; c<=8; c++){
+                if(board.getPiece(new ChessPosition(r,c)) != null && board.getPiece(new ChessPosition(r,c)).getTeamColor() == teamColor){
+                    teamMoves.addAll(validMoves(new ChessPosition(r,c)));
+                }
+            }
         }
+
+        System.out.println(teamMoves);
+        if(teamMoves.isEmpty()){
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * Determines if the given team is in stalemate, which here is defined as having
@@ -167,7 +168,7 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+
     }
 
     /**
