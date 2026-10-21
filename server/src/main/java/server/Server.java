@@ -22,6 +22,9 @@ public class Server {
         UserService userService = new UserService(dataAccess);
         RegisterHandler registerHandler = new RegisterHandler(userService);
         javalin.post("/user", registerHandler::handle);
+
+        LoginHandler loginHandler = new LoginHandler(userService);
+        javalin.post("/session", loginHandler::handle);
     }
 
     public int run(int desiredPort) {

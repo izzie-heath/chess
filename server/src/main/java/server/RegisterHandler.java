@@ -1,9 +1,7 @@
 package server;
 
 import com.google.gson.Gson;
-import dataaccess.DataAccess;
 import io.javalin.http.Context;
-import service.ClearService;
 import service.UserService;
 import dataaccess.DataAccessException;
 import service.register.AlreadyTakenException;

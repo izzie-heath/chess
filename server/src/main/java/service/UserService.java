@@ -9,6 +9,9 @@ import service.register.BadRequestException;
 import service.register.RegisterRequest;
 import service.register.RegisterResult;
 import java.util.UUID;
+import service.login.LoginRequest;
+import service.login.LoginResult;
+import service.login.UnauthorizedException;
 
 public class UserService {
     DataAccess data;
@@ -34,5 +37,18 @@ public class UserService {
         data.createAuth(new AuthData(authToken, request.username()));
 
         return new RegisterResult(request.username(), authToken);
+    }
+
+    public LoginResult login(LoginRequest request) throws DataAccessException, UnauthorizedException, BadRequestException {
+        if(request.username() == null || request.password() == null) {
+            throw new BadRequestException("Error: bad request");
+        }
+
+        if(data.getUser(request.username()) == null || ! data.getUser(request.username()).password().equals(request.password())){
+            throw new UnauthorizedException("Error: unauthorized");
+        }
+
+        String authToken = generateToken();
+        return new LoginResult(request.username(), authToken);
     }
 }
