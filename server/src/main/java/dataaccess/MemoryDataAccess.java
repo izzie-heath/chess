@@ -15,4 +15,14 @@ public class MemoryDataAccess implements DataAccess{
         authList.clear();
         gameList.clear();
     }
+
+    public UserData getUser(String username) {
+        return userList.get(username);
+    }
+    public void createUser(UserData data) {
+        userList.put(data.username(), data);
+    }
+    public void createAuth(AuthData data) {
+        authList.put(data.authToken(), data);
+    }
 }

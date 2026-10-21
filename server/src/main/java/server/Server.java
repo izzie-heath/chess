@@ -4,6 +4,7 @@ import dataaccess.DataAccess;
 import dataaccess.MemoryDataAccess;
 import io.javalin.*;
 import service.ClearService;
+import service.UserService;
 
 public class Server {
 
@@ -17,6 +18,10 @@ public class Server {
         ClearService clearService = new ClearService(dataAccess);
         ClearHandler clearHandler = new ClearHandler(clearService);
         javalin.delete("/db", clearHandler::handle);
+
+        UserService userService = new UserService(dataAccess);
+        RegisterHandler registerHandler = new RegisterHandler(userService);
+        javalin.post("/user", registerHandler::handle);
     }
 
     public int run(int desiredPort) {
