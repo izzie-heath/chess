@@ -49,6 +49,16 @@ public class UserService {
         }
 
         String authToken = generateToken();
+        data.createAuth(new AuthData(authToken, request.username()));
         return new LoginResult(request.username(), authToken);
+    }
+
+    public AuthData logout(String authToken) throws DataAccessException, UnauthorizedException {
+        if (data.getAuth(authToken) == null) {
+            throw new UnauthorizedException("Error: unauthorized");
+        }
+        AuthData a = data.getAuth(authToken);
+        data.deleteAuth(authToken);
+        return a;
     }
 }

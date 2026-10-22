@@ -6,10 +6,8 @@ import service.UserService;
 import dataaccess.DataAccessException;
 import service.login.LoginRequest;
 import service.login.UnauthorizedException;
-import service.register.AlreadyTakenException;
 import service.register.BadRequestException;
 import service.login.LoginResult;
-import service.login.LoginRequest;
 
 public class LoginHandler {
     UserService service;

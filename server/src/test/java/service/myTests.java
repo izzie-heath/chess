@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import service.login.LoginRequest;
+import service.login.LoginResult;
 import service.login.UnauthorizedException;
 import service.register.AlreadyTakenException;
 import service.register.BadRequestException;
@@ -47,7 +48,7 @@ public class myTests {
     //login tests
     @Test
     @DisplayName("Incorrect Password Throws Error")
-    public void loginWrongPassword() throws BadRequestException, DataAccessException, UnauthorizedException, AlreadyTakenException {
+    public void loginWrongPassword() throws BadRequestException, DataAccessException, AlreadyTakenException {
         DataAccess dataAccess = new MemoryDataAccess();
         UserService userService = new UserService(dataAccess);
         RegisterRequest registerRequest = new RegisterRequest("izzie", "securePassword", "izzieh@byu.edu");
@@ -58,12 +59,34 @@ public class myTests {
 
     @Test
     @DisplayName("Password Can't Be Null When Logging In")
-    public void loginNullPassword() throws BadRequestException, DataAccessException, UnauthorizedException, AlreadyTakenException {
+    public void loginNullPassword() throws BadRequestException, DataAccessException, AlreadyTakenException {
         DataAccess dataAccess = new MemoryDataAccess();
         UserService userService = new UserService(dataAccess);
         RegisterRequest registerRequest = new RegisterRequest("izzie", "securePassword", "izzieh@byu.edu");
         userService.register(registerRequest);
         LoginRequest loginRequest = new LoginRequest("izzie", "");
         Assertions.assertThrows(UnauthorizedException.class, () -> userService.login(loginRequest));
+    }
+
+
+    //logout tests
+    @Test
+    @DisplayName("Logout Works Without Errors")
+    public void logoutWorks() throws BadRequestException, UnauthorizedException, DataAccessException, AlreadyTakenException {
+        DataAccess dataAccess = new MemoryDataAccess();
+        UserService userService = new UserService(dataAccess);
+        RegisterRequest registerRequest = new RegisterRequest("izzie", "securePassword", "izzieh@byu.edu");
+        userService.register(registerRequest);
+        LoginRequest loginRequest = new LoginRequest("izzie", "securePassword");
+        LoginResult loginResult = userService.login(loginRequest);
+        Assertions.assertDoesNotThrow(() -> userService.logout(loginResult.authToken()));
+    }
+
+    @Test
+    @DisplayName("Logout Fails When No Auth Token Is Provided")
+    public void logoutNoAuthToken() throws BadRequestException, UnauthorizedException, DataAccessException, AlreadyTakenException {
+        DataAccess dataAccess = new MemoryDataAccess();
+        UserService userService = new UserService(dataAccess);
+        Assertions.assertThrows(UnauthorizedException.class, () -> userService.logout(null));
     }
 }

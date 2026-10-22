@@ -25,6 +25,9 @@ public class Server {
 
         LoginHandler loginHandler = new LoginHandler(userService);
         javalin.post("/session", loginHandler::handle);
+
+        LogoutHandler logoutHandler = new LogoutHandler(userService);
+        javalin.delete("/session", logoutHandler::handle);
     }
 
     public int run(int desiredPort) {

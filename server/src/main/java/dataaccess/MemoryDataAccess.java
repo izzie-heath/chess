@@ -25,4 +25,14 @@ public class MemoryDataAccess implements DataAccess{
     public void createAuth(AuthData data) {
         authList.put(data.authToken(), data);
     }
+
+    public AuthData getAuth(String token){
+        if(authList.get(token) == null){
+            return null;
+        }
+        return authList.get(token);
+    }
+    public void deleteAuth(String token){
+        authList.remove(token);
+    }
 }
