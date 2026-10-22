@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import service.createGame.CreateGameRequest;
+import service.listGames.ListGamesResult;
 import service.login.LoginRequest;
 import service.login.LoginResult;
 import service.login.UnauthorizedException;
@@ -114,5 +115,29 @@ public class myTests {
         GameService gameService = new GameService(dataAccess);
         CreateGameRequest createGameRequest = new CreateGameRequest("game");
         Assertions.assertThrows(UnauthorizedException.class, () -> gameService.createGame("", createGameRequest));
+    }
+
+    //list games test
+    @Test
+    @DisplayName("Create Game Works Without Errors")
+    public void listGamesWorks() throws BadRequestException, UnauthorizedException, DataAccessException, AlreadyTakenException{
+        DataAccess dataAccess = new MemoryDataAccess();
+        UserService userService = new UserService(dataAccess);
+        RegisterRequest registerRequest = new RegisterRequest("izzie", "securePassword", "izzieh@byu.edu");
+        userService.register(registerRequest);
+        LoginRequest loginRequest = new LoginRequest("izzie", "securePassword");
+        LoginResult loginResult = userService.login(loginRequest);
+        GameService gameService = new GameService(dataAccess);
+        CreateGameRequest createGameRequest = new CreateGameRequest("game");
+        gameService.createGame(loginResult.authToken(), createGameRequest);
+        Assertions.assertDoesNotThrow(() -> gameService.listGames(loginResult.authToken()));
+    }
+
+    @Test
+    @DisplayName("Create Game Fails When No Auth Token Is Provided")
+    public void listGamesNoAuthToken() throws BadRequestException, UnauthorizedException, DataAccessException, AlreadyTakenException {
+        DataAccess dataAccess = new MemoryDataAccess();
+        GameService gameService = new GameService(dataAccess);
+        Assertions.assertThrows(UnauthorizedException.class, () -> gameService.listGames(""));
     }
 }

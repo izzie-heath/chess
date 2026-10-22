@@ -2,19 +2,15 @@ package service;
 
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
-import model.AuthData;
-import model.UserData;
+import model.GameData;
 import service.createGame.CreateGameRequest;
 import service.createGame.CreateGameResult;
-import service.register.AlreadyTakenException;
 import service.register.BadRequestException;
-import service.register.RegisterRequest;
-import service.register.RegisterResult;
-import java.util.UUID;
-import service.login.LoginRequest;
-import service.login.LoginResult;
+
+import java.util.Collection;
+
 import service.login.UnauthorizedException;
-import service.AuthService;
+import service.listGames.*;
 
 public class GameService {
     DataAccess data;
@@ -32,5 +28,12 @@ public class GameService {
         authService.authenticate(authToken);
         int gameNum = data.createGame(request.gameName());
         return new CreateGameResult(gameNum);
+    }
+
+    public ListGamesResult listGames(String authToken) throws UnauthorizedException, DataAccessException{
+        System.out.println(authToken);
+        authService.authenticate(authToken);
+        Collection<GameData> games = data.listGames();
+        return new ListGamesResult(games);
     }
 }

@@ -1,8 +1,11 @@
 package dataaccess;
 
 import model.AuthData;
+import model.GameData;
 import model.UserData;
 import service.login.UnauthorizedException;
+
+import java.util.Collection;
 
 public interface DataAccess {
     void clear() throws DataAccessException;
@@ -15,4 +18,6 @@ public interface DataAccess {
     void deleteAuth(String authToken) throws DataAccessException;
 
     int createGame(String gameName) throws DataAccessException;
+
+    Collection<GameData> listGames() throws DataAccessException;
 }
