@@ -15,9 +15,11 @@ import service.login.UnauthorizedException;
 
 public class UserService {
     DataAccess data;
+    AuthService authService;
 
     public UserService(DataAccess data){
         this.data = data;
+        this.authService = new AuthService(data);
     }
 
     public static String generateToken() {
@@ -54,10 +56,7 @@ public class UserService {
     }
 
     public AuthData logout(String authToken) throws DataAccessException, UnauthorizedException {
-        if (data.getAuth(authToken) == null) {
-            throw new UnauthorizedException("Error: unauthorized");
-        }
-        AuthData a = data.getAuth(authToken);
+        AuthData a = authService.authenticate(authToken);
         data.deleteAuth(authToken);
         return a;
     }

@@ -1,19 +1,23 @@
 package dataaccess;
 
+import chess.ChessGame;
 import model.AuthData;
 import model.UserData;
+import model.GameData;
 
 import java.util.HashMap;
 
 public class MemoryDataAccess implements DataAccess{
     private final HashMap<String, UserData> userList = new HashMap<>();
     private final HashMap<String, AuthData> authList = new HashMap<>();
-    private final HashMap<Integer, AuthData> gameList = new HashMap<>();
+    private final HashMap<Integer, GameData> gameList = new HashMap<>();
+    private int nextGameID = 1;
 
     public void clear(){
         userList.clear();
         authList.clear();
         gameList.clear();
+        nextGameID = 1;
     }
 
     public UserData getUser(String username) {
@@ -34,5 +38,13 @@ public class MemoryDataAccess implements DataAccess{
     }
     public void deleteAuth(String token){
         authList.remove(token);
+    }
+
+    public int createGame(String name) {
+        int gameID = nextGameID;
+        nextGameID = nextGameID + 1;
+        GameData game = new GameData(gameID, null, null, name, new ChessGame());
+        gameList.put(gameID, game);
+        return gameID;
     }
 }

@@ -6,6 +6,7 @@ import dataaccess.MemoryDataAccess;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import service.createGame.CreateGameRequest;
 import service.login.LoginRequest;
 import service.login.LoginResult;
 import service.login.UnauthorizedException;
@@ -88,5 +89,30 @@ public class myTests {
         DataAccess dataAccess = new MemoryDataAccess();
         UserService userService = new UserService(dataAccess);
         Assertions.assertThrows(UnauthorizedException.class, () -> userService.logout(null));
+    }
+
+
+    //create game tests
+    @Test
+    @DisplayName("Create Game Works Without Errors")
+    public void createGameWorks() throws BadRequestException, UnauthorizedException, DataAccessException, AlreadyTakenException{
+        DataAccess dataAccess = new MemoryDataAccess();
+        UserService userService = new UserService(dataAccess);
+        RegisterRequest registerRequest = new RegisterRequest("izzie", "securePassword", "izzieh@byu.edu");
+        userService.register(registerRequest);
+        LoginRequest loginRequest = new LoginRequest("izzie", "securePassword");
+        LoginResult loginResult = userService.login(loginRequest);
+        GameService gameService = new GameService(dataAccess);
+        CreateGameRequest createGameRequest = new CreateGameRequest("game");
+        Assertions.assertDoesNotThrow(() -> gameService.createGame(loginResult.authToken(), createGameRequest));
+    }
+
+    @Test
+    @DisplayName("Create Game Fails When No Auth Token Is Provided")
+    public void createGameNoAuthToken() throws BadRequestException, UnauthorizedException, DataAccessException, AlreadyTakenException {
+        DataAccess dataAccess = new MemoryDataAccess();
+        GameService gameService = new GameService(dataAccess);
+        CreateGameRequest createGameRequest = new CreateGameRequest("game");
+        Assertions.assertThrows(UnauthorizedException.class, () -> gameService.createGame("", createGameRequest));
     }
 }
