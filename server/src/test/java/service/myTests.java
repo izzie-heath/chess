@@ -210,5 +210,16 @@ public class myTests {
         Assertions.assertThrows(AlreadyTakenException.class, () -> gameService.joinGame(loginResult.authToken(), joinGameRequest2));
     }
 
+    @Test
+    @DisplayName("Join Game ID Doesn't Exist")
+    public void joinGameInvalidID() throws BadRequestException, UnauthorizedException, DataAccessException, AlreadyTakenException{
+        DataAccess dataAccess = new MemoryDataAccess();
+        UserService userService = new UserService(dataAccess);
+        GameService gameService = new GameService(dataAccess);
+        RegisterRequest registerRequest = new RegisterRequest("izzie", "securePassword", "izzieh@byu.edu");
+        RegisterResult registerResult = userService.register(registerRequest);
+        JoinGameRequest joinGameRequest = new JoinGameRequest(67, "BLACK");
+        Assertions.assertThrows(BadRequestException.class, () -> gameService.joinGame(registerResult.authToken(), joinGameRequest));
+    }
 }
 
