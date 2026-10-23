@@ -2,9 +2,12 @@ package service;
 
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
+import model.AuthData;
 import model.GameData;
 import service.createGame.CreateGameRequest;
 import service.createGame.CreateGameResult;
+import service.joinGame.JoinGameRequest;
+import service.register.AlreadyTakenException;
 import service.register.BadRequestException;
 
 import java.util.Collection;
@@ -36,4 +39,32 @@ public class GameService {
         Collection<GameData> games = data.listGames();
         return new ListGamesResult(games);
     }
+
+    public void joinGame(String authToken, JoinGameRequest request) throws BadRequestException, UnauthorizedException, AlreadyTakenException, DataAccessException {
+        if(request.gameID() == null || request.playerColor() == null){
+            throw new BadRequestException("Error: bad request");
+        }
+        if(!request.playerColor().equals("WHITE") && !request.playerColor().equals("BLACK")){
+            throw new BadRequestException("Error: bad request");
+        }
+        AuthData authData = authService.authenticate(authToken);
+        GameData game = data.getGame(request.gameID());
+        if (game == null) {
+            throw new BadRequestException("Error: bad request");
+        }
+        GameData updatedGame;
+        if(request.playerColor().equals("WHITE")) {
+            if (game.whiteUsername() != null) {
+                throw new AlreadyTakenException("Error: already taken");
+            }
+            updatedGame = new GameData(game.gameID(), authData.username(), game.blackUsername(), game.gameName(), game.game());
+        } else {
+            if (game.blackUsername() != null) {
+                throw new AlreadyTakenException("Error: already taken");
+            }
+            updatedGame = new GameData(game.gameID(), game.whiteUsername(), authData.username(), game.gameName(), game.game());
+        }
+        data.updateGame(updatedGame);
+    }
+
 }

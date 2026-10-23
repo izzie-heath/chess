@@ -36,6 +36,9 @@ public class Server {
 
         ListGamesHandler listGamesHandler = new ListGamesHandler(gameService);
         javalin.get("/game", listGamesHandler::handle);
+
+        JoinGameHandler joinGameHandler = new JoinGameHandler(gameService);
+        javalin.put("/game", joinGameHandler::handle);
     }
 
     public int run(int desiredPort) {

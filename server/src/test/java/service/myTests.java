@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import service.createGame.CreateGameRequest;
+import service.joinGame.JoinGameRequest;
 import service.listGames.ListGamesResult;
 import service.login.LoginRequest;
 import service.login.LoginResult;
@@ -14,6 +15,7 @@ import service.login.UnauthorizedException;
 import service.register.AlreadyTakenException;
 import service.register.BadRequestException;
 import service.register.RegisterRequest;
+import service.register.RegisterResult;
 
 public class myTests {
     //clear tests

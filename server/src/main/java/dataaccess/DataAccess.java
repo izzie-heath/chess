@@ -5,6 +5,7 @@ import model.GameData;
 import model.UserData;
 import service.login.UnauthorizedException;
 
+import javax.xml.crypto.Data;
 import java.util.Collection;
 
 public interface DataAccess {
@@ -20,4 +21,7 @@ public interface DataAccess {
     int createGame(String gameName) throws DataAccessException;
 
     Collection<GameData> listGames() throws DataAccessException;
+
+    GameData getGame(int gameID) throws DataAccessException;
+    void updateGame(GameData game) throws DataAccessException;
 }
