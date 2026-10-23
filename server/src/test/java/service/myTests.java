@@ -160,7 +160,6 @@ public class myTests {
         Assertions.assertDoesNotThrow(() -> gameService.joinGame(loginResult.authToken(), joinGameRequest));
     }
 
-
     @Test
     @DisplayName("Join Game Works With Black Piece")
     public void joinGameWorksBlack() throws BadRequestException, UnauthorizedException, DataAccessException, AlreadyTakenException{
@@ -176,5 +175,40 @@ public class myTests {
         JoinGameRequest joinGameRequest = new JoinGameRequest(1, "BLACK");
         Assertions.assertDoesNotThrow(() -> gameService.joinGame(loginResult.authToken(), joinGameRequest));
     }
+
+    @Test
+    @DisplayName("Join Game Throws Error With Invalid Piece Color")
+    public void joinGameInvalidColor() throws BadRequestException, UnauthorizedException, DataAccessException, AlreadyTakenException{
+        DataAccess dataAccess = new MemoryDataAccess();
+        UserService userService = new UserService(dataAccess);
+        RegisterRequest registerRequest = new RegisterRequest("izzie", "securePassword", "izzieh@byu.edu");
+        userService.register(registerRequest);
+        LoginRequest loginRequest = new LoginRequest("izzie", "securePassword");
+        LoginResult loginResult = userService.login(loginRequest);
+        GameService gameService = new GameService(dataAccess);
+        CreateGameRequest createGameRequest = new CreateGameRequest("game");
+        gameService.createGame(loginResult.authToken(), createGameRequest);
+        JoinGameRequest joinGameRequest = new JoinGameRequest(1, "GREEN");
+        Assertions.assertThrows(BadRequestException.class, () -> gameService.joinGame(loginResult.authToken(), joinGameRequest));
+    }
+
+    @Test
+    @DisplayName("Join Game Color Already Taken")
+    public void joinGameColorTaken() throws BadRequestException, UnauthorizedException, DataAccessException, AlreadyTakenException{
+        DataAccess dataAccess = new MemoryDataAccess();
+        UserService userService = new UserService(dataAccess);
+        RegisterRequest registerRequest = new RegisterRequest("izzie", "securePassword", "izzieh@byu.edu");
+        userService.register(registerRequest);
+        LoginRequest loginRequest = new LoginRequest("izzie", "securePassword");
+        LoginResult loginResult = userService.login(loginRequest);
+        GameService gameService = new GameService(dataAccess);
+        CreateGameRequest createGameRequest = new CreateGameRequest("game");
+        gameService.createGame(loginResult.authToken(), createGameRequest);
+        JoinGameRequest joinGameRequest = new JoinGameRequest(1, "BLACK");
+        gameService.joinGame(loginResult.authToken(), joinGameRequest);
+        JoinGameRequest joinGameRequest2 = new JoinGameRequest(1, "BLACK");
+        Assertions.assertThrows(AlreadyTakenException.class, () -> gameService.joinGame(loginResult.authToken(), joinGameRequest2));
+    }
+
 }
 
