@@ -142,4 +142,39 @@ public class myTests {
         GameService gameService = new GameService(dataAccess);
         Assertions.assertThrows(UnauthorizedException.class, () -> gameService.listGames(""));
     }
+
+    //join game
+    @Test
+    @DisplayName("Join Game Works With White Piece")
+    public void joinGameWorksWhite() throws BadRequestException, UnauthorizedException, DataAccessException, AlreadyTakenException{
+        DataAccess dataAccess = new MemoryDataAccess();
+        UserService userService = new UserService(dataAccess);
+        RegisterRequest registerRequest = new RegisterRequest("izzie", "securePassword", "izzieh@byu.edu");
+        userService.register(registerRequest);
+        LoginRequest loginRequest = new LoginRequest("izzie", "securePassword");
+        LoginResult loginResult = userService.login(loginRequest);
+        GameService gameService = new GameService(dataAccess);
+        CreateGameRequest createGameRequest = new CreateGameRequest("game");
+        gameService.createGame(loginResult.authToken(), createGameRequest);
+        JoinGameRequest joinGameRequest = new JoinGameRequest(1, "WHITE");
+        Assertions.assertDoesNotThrow(() -> gameService.joinGame(loginResult.authToken(), joinGameRequest));
+    }
+
+
+    @Test
+    @DisplayName("Join Game Works With Black Piece")
+    public void joinGameWorksBlack() throws BadRequestException, UnauthorizedException, DataAccessException, AlreadyTakenException{
+        DataAccess dataAccess = new MemoryDataAccess();
+        UserService userService = new UserService(dataAccess);
+        RegisterRequest registerRequest = new RegisterRequest("izzie", "securePassword", "izzieh@byu.edu");
+        userService.register(registerRequest);
+        LoginRequest loginRequest = new LoginRequest("izzie", "securePassword");
+        LoginResult loginResult = userService.login(loginRequest);
+        GameService gameService = new GameService(dataAccess);
+        CreateGameRequest createGameRequest = new CreateGameRequest("game");
+        gameService.createGame(loginResult.authToken(), createGameRequest);
+        JoinGameRequest joinGameRequest = new JoinGameRequest(1, "BLACK");
+        Assertions.assertDoesNotThrow(() -> gameService.joinGame(loginResult.authToken(), joinGameRequest));
+    }
 }
+
