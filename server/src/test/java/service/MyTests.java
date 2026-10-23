@@ -16,7 +16,7 @@ import service.register.BadRequestException;
 import service.register.RegisterRequest;
 import service.register.RegisterResult;
 
-public class myTests {
+public class MyTests {
     //clear tests
     @Test
     @DisplayName("Clear Runs Successfully")
