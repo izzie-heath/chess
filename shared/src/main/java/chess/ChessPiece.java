@@ -140,15 +140,11 @@ public class ChessPiece {
         ArrayList<ChessMove> moves = new ArrayList<>();
         boolean otherPieceFound = false;
 
-        for (int i = 0; i < directions.length; i++) {
-            int r = myPosition.getRow() + directions[i][0];
-            int c = myPosition.getColumn() + directions[i][1];
-            if(new ChessPosition(r,c).inBounds()){
-                otherPieceFound = isOtherPieceFound(board, myPosition, r, c, moves, piece, otherPieceFound);
-            }
-        }
+        extracted(board, myPosition, directions, otherPieceFound, moves, piece);
         return moves;
     }
+
+
 
     public Collection<ChessMove> knightMoves(ChessBoard board, ChessPosition myPosition) {
         int[][] directions = {{1, 2}, {-1, 2}, {1, -2}, {-1, -2}, {2, 1}, {-2, 1}, {2, -1}, {-2, -1}};
@@ -156,13 +152,7 @@ public class ChessPiece {
         ArrayList<ChessMove> moves = new ArrayList<>();
         boolean otherPieceFound = false;
 
-        for (int i = 0; i < directions.length; i++) {
-            int r = myPosition.getRow() + directions[i][0];
-            int c = myPosition.getColumn() + directions[i][1];
-            if(new ChessPosition(r,c).inBounds()){
-                otherPieceFound = isOtherPieceFound(board, myPosition, r, c, moves, piece, otherPieceFound);
-            }
-        }
+        extracted(board, myPosition, directions, otherPieceFound, moves, piece);
         return moves;
     }
 
@@ -183,28 +173,34 @@ public class ChessPiece {
         }
 
         if(r + direction == promotionRow){
-            if(new ChessPosition(r + direction, c).inBounds() && (board.getPiece(new ChessPosition(r + direction,  c)) == null || board.getPiece(new ChessPosition(r + direction,  c)).pieceColor != pieceColor)){
+            if(new ChessPosition(r + direction, c).inBounds() && (board.getPiece(new ChessPosition(r + direction,  c)) == null
+                    || board.getPiece(new ChessPosition(r + direction,  c)).pieceColor != pieceColor)){
                 addPromotionPieces(myPosition, r + direction, c, moves);
             }
-            if(new ChessPosition(r + direction, c + 1).inBounds() && board.getPiece(new ChessPosition(r + direction,  c + 1)) != null && board.getPiece(new ChessPosition(r + direction,  c + 1)).pieceColor != pieceColor){
+            if(new ChessPosition(r + direction, c + 1).inBounds() && board.getPiece(new ChessPosition(r + direction,  c + 1)) != null
+                    && board.getPiece(new ChessPosition(r + direction,  c + 1)).pieceColor != pieceColor){
                 addPromotionPieces(myPosition, r + direction, c + 1, moves);
                 moves.add(new ChessMove(myPosition, new ChessPosition(r + direction, c + 1), ChessPiece.PieceType.BISHOP));
             }
-            if(new ChessPosition(r + direction, c - 1).inBounds() && board.getPiece(new ChessPosition(r + direction,  c - 1)) != null && board.getPiece(new ChessPosition(r + direction,  c - 1)).pieceColor != pieceColor){
+            if(new ChessPosition(r + direction, c - 1).inBounds() && board.getPiece(new ChessPosition(r + direction,  c - 1)) != null
+                    && board.getPiece(new ChessPosition(r + direction,  c - 1)).pieceColor != pieceColor){
                 addPromotionPieces(myPosition, r + direction, c - 1, moves);
             }
         } else {
             if(new ChessPosition(r + direction, c).inBounds() && board.getPiece(new ChessPosition(r + direction,  c)) == null){
                 moves.add(new ChessMove(myPosition, new ChessPosition(r + direction, c), null));
             }
-            if(new ChessPosition(r + direction, c + 1).inBounds() && board.getPiece(new ChessPosition(r + direction,  c + 1)) != null && board.getPiece(new ChessPosition(r + direction,  c + 1)).pieceColor != piece.pieceColor){
+            if(new ChessPosition(r + direction, c + 1).inBounds() && board.getPiece(new ChessPosition(r + direction,  c + 1)) != null
+                    && board.getPiece(new ChessPosition(r + direction,  c + 1)).pieceColor != piece.pieceColor){
                 moves.add(new ChessMove(myPosition, new ChessPosition(r + direction, c + 1), null));
             }
-            if(new ChessPosition(r + direction, c - 1).inBounds() && board.getPiece(new ChessPosition(r + direction,  c - 1)) != null && board.getPiece(new ChessPosition(r + direction,  c - 1)).pieceColor != piece.pieceColor){
+            if(new ChessPosition(r + direction, c - 1).inBounds() && board.getPiece(new ChessPosition(r + direction,  c - 1)) != null
+                    && board.getPiece(new ChessPosition(r + direction,  c - 1)).pieceColor != piece.pieceColor){
                 moves.add(new ChessMove(myPosition, new ChessPosition(r + direction, c - 1), null));
             }
         }
-        if(r == startRow && board.getPiece(new ChessPosition(r + (direction * 2),  c)) == null && board.getPiece(new ChessPosition(r + direction, c)) == null) {
+        if(r == startRow && board.getPiece(new ChessPosition(r + (direction * 2),  c)) == null
+                && board.getPiece(new ChessPosition(r + direction, c)) == null) {
             moves.add(new ChessMove(myPosition, new ChessPosition(r + (direction * 2), c), null));
         }
 
@@ -212,7 +208,8 @@ public class ChessPiece {
     }
 
 
-    public static boolean isOtherPieceFound(ChessBoard board, ChessPosition myPosition, int r, int c, ArrayList<ChessMove> moves, ChessPiece piece, boolean otherPieceFound) {
+    public static boolean isOtherPieceFound(ChessBoard board, ChessPosition myPosition,
+                                            int r, int c, ArrayList<ChessMove> moves, ChessPiece piece, boolean otherPieceFound) {
         if (board.getPiece(new ChessPosition(r, c)) == null) {
             moves.add(new ChessMove(myPosition, new ChessPosition(r, c), null));
         } else {
@@ -259,6 +256,17 @@ public class ChessPiece {
             return pawnMoves(board, myPosition);
         }
         return null;
+    }
+
+    private static void extracted(ChessBoard board, ChessPosition myPosition, int[][] directions,
+                                  boolean otherPieceFound, ArrayList<ChessMove> moves, ChessPiece piece) {
+        for (int i = 0; i < directions.length; i++) {
+            int r = myPosition.getRow() + directions[i][0];
+            int c = myPosition.getColumn() + directions[i][1];
+            if(new ChessPosition(r,c).inBounds()){
+                otherPieceFound = isOtherPieceFound(board, myPosition, r, c, moves, piece, otherPieceFound);
+            }
+        }
     }
 
     @Override

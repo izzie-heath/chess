@@ -1,4 +1,4 @@
-package service.listGames;
+package service.listgames;
 
 import model.GameData;
 

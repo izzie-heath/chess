@@ -4,16 +4,16 @@ import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
 import model.AuthData;
 import model.GameData;
-import service.createGame.CreateGameRequest;
-import service.createGame.CreateGameResult;
-import service.joinGame.JoinGameRequest;
+import service.creategame.CreateGameRequest;
+import service.creategame.CreateGameResult;
+import service.joingame.JoinGameRequest;
 import service.register.AlreadyTakenException;
 import service.register.BadRequestException;
 
 import java.util.Collection;
 
 import service.login.UnauthorizedException;
-import service.listGames.*;
+import service.listgames.*;
 
 public class GameService {
     DataAccess data;
@@ -24,7 +24,8 @@ public class GameService {
         this.authService = new AuthService(data);
     }
 
-    public CreateGameResult createGame(String authToken, CreateGameRequest request) throws BadRequestException, UnauthorizedException, DataAccessException {
+    public CreateGameResult createGame(String authToken, CreateGameRequest request)
+            throws BadRequestException, UnauthorizedException, DataAccessException {
         if(request.gameName() == null) {
             throw new BadRequestException("Error: bad request");
         }
@@ -33,14 +34,16 @@ public class GameService {
         return new CreateGameResult(gameNum);
     }
 
-    public ListGamesResult listGames(String authToken) throws UnauthorizedException, DataAccessException{
+    public ListGamesResult listGames(String authToken)
+            throws UnauthorizedException, DataAccessException{
         System.out.println(authToken);
         authService.authenticate(authToken);
         Collection<GameData> games = data.listGames();
         return new ListGamesResult(games);
     }
 
-    public void joinGame(String authToken, JoinGameRequest request) throws BadRequestException, UnauthorizedException, AlreadyTakenException, DataAccessException {
+    public void joinGame(String authToken, JoinGameRequest request)
+            throws BadRequestException, UnauthorizedException, AlreadyTakenException, DataAccessException {
         if(request.gameID() == null || request.playerColor() == null){
             throw new BadRequestException("Error: bad request");
         }

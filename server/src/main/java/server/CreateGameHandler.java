@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import io.javalin.http.Context;
 import service.GameService;
 import dataaccess.DataAccessException;
-import service.createGame.CreateGameRequest;
-import service.createGame.CreateGameResult;
+import service.creategame.CreateGameRequest;
+import service.creategame.CreateGameResult;
 import service.login.UnauthorizedException;
 import service.register.BadRequestException;
 

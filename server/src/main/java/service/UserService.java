@@ -4,7 +4,6 @@ import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
 import model.AuthData;
 import model.UserData;
-import service.joinGame.JoinGameRequest;
 import service.register.AlreadyTakenException;
 import service.register.BadRequestException;
 import service.register.RegisterRequest;

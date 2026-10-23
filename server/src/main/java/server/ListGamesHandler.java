@@ -4,11 +4,8 @@ import com.google.gson.Gson;
 import io.javalin.http.Context;
 import service.GameService;
 import dataaccess.DataAccessException;
-import service.createGame.CreateGameRequest;
-import service.createGame.CreateGameResult;
-import service.listGames.ListGamesResult;
+import service.listgames.ListGamesResult;
 import service.login.UnauthorizedException;
-import service.register.BadRequestException;
 
 public class ListGamesHandler {
     GameService service;

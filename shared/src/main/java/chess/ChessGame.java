@@ -121,7 +121,8 @@ public class ChessGame {
         for(int r=1; r<=8; r++){
             for(int c=1; c<=8; c++){
                 if(board.getPiece(new ChessPosition(r,c)) != null && board.getPiece(new ChessPosition(r,c)).getTeamColor() != teamColor){
-                    enemyMoves.addAll(new ChessPiece(enemyTeam, board.getPiece(new ChessPosition(r,c)).getPieceType()).pieceMoves(board, new ChessPosition(r,c)));
+                    enemyMoves.addAll(new ChessPiece(enemyTeam, board.getPiece(new ChessPosition(r,c)).getPieceType())
+                            .pieceMoves(board, new ChessPosition(r,c)));
                 }
             }
         }
@@ -148,13 +149,7 @@ public class ChessGame {
             return false;
         }
 
-        for(int r=1; r<=8; r++){
-            for(int c=1; c<=8; c++){
-                if(board.getPiece(new ChessPosition(r,c)) != null && board.getPiece(new ChessPosition(r,c)).getTeamColor() == teamColor){
-                    teamMoves.addAll(validMoves(new ChessPosition(r,c)));
-                }
-            }
-        }
+        extracted(teamColor, teamMoves);
 
         if(teamMoves.isEmpty()){
             return true;
@@ -176,13 +171,7 @@ public class ChessGame {
         }
 
         ArrayList<ChessMove> teamMoves = new ArrayList<>();
-        for(int r=1; r<=8; r++){
-            for(int c=1; c<=8; c++){
-                if(board.getPiece(new ChessPosition(r,c)) != null && board.getPiece(new ChessPosition(r,c)).getTeamColor() == teamColor){
-                    teamMoves.addAll(validMoves(new ChessPosition(r,c)));
-                }
-            }
-        }
+        extracted(teamColor, teamMoves);
 
         if(teamMoves.isEmpty()){
             return true;
@@ -212,7 +201,8 @@ public class ChessGame {
     public ChessPosition getTeamsKingPosition(TeamColor teamColor){
         for(int r=1; r<=8; r++){
             for(int c=1; c<=8; c++){
-                if(board.getPiece(new ChessPosition(r,c)) != null && board.getPiece(new ChessPosition(r,c)).getTeamColor() == teamColor && board.getPiece(new ChessPosition(r,c)).getPieceType() == ChessPiece.PieceType.KING){
+                if(board.getPiece(new ChessPosition(r,c)) != null && board.getPiece(new ChessPosition(r,c)).getTeamColor() == teamColor
+                        && board.getPiece(new ChessPosition(r,c)).getPieceType() == ChessPiece.PieceType.KING){
                     return new ChessPosition(r,c);
                 }
             }
@@ -230,6 +220,16 @@ public class ChessGame {
             }
         }
         return newBoard;
+    }
+
+    private void extracted(TeamColor teamColor, ArrayList<ChessMove> teamMoves) {
+        for(int r=1; r<=8; r++){
+            for(int c=1; c<=8; c++){
+                if(board.getPiece(new ChessPosition(r,c)) != null && board.getPiece(new ChessPosition(r,c)).getTeamColor() == teamColor){
+                    teamMoves.addAll(validMoves(new ChessPosition(r,c)));
+                }
+            }
+        }
     }
 
     @Override
