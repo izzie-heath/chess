@@ -1,7 +1,9 @@
 package server;
 
 import dataaccess.DataAccess;
+import dataaccess.DataAccessException;
 import dataaccess.MemoryDataAccess;
+import dataaccess.sql.SqlDataAccess;
 import io.javalin.*;
 import service.ClearService;
 import service.GameService;
@@ -11,11 +13,11 @@ public class Server {
 
     private final Javalin javalin;
 
-    public Server() {
+    public Server() throws DataAccessException {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
         // Register your endpoints and exception handlers here.
-        DataAccess data = new MemoryDataAccess();
+        DataAccess data = new SqlDataAccess();
         ClearService clearService = new ClearService(data);
         ClearHandler clearHandler = new ClearHandler(clearService);
         javalin.delete("/db", clearHandler::handle);
