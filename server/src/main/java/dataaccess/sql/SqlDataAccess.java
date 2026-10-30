@@ -9,6 +9,7 @@ import model.UserData;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
@@ -75,12 +76,35 @@ public class SqlDataAccess implements DataAccess {
 
     @Override
     public UserData getUser(String username) throws DataAccessException {
+        String statement = "SELECT username, password, email FROM userTable WHERE username = ?";
+        try(Connection connection = DatabaseManager.getConnection()){
+            try(PreparedStatement preparedStatement = connection.prepareStatement(statement)){
+                preparedStatement.setString(1, username);
+                try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if(resultSet.next()){
+                        return new UserData(resultSet.getString("username"), resultSet.getString("password"), resultSet.getString("email"));
+                    }
+                }
+            }
+        } catch(SQLException e){
+            throw new DataAccessException("Unable to get user: " + e.getMessage());
+        }
         return null;
     }
 
     @Override
     public void createUser(UserData data) throws DataAccessException {
-
+        String statement = "INSERT INTO userTable (username, password, email) VALUES (?, ?, ?)";
+        try(Connection connection = DatabaseManager.getConnection()){
+            try(PreparedStatement preparedStatement = connection.prepareStatement(statement)){
+                preparedStatement.setString(1, data.username());
+                preparedStatement.setString(2, data.password());
+                preparedStatement.setString(3, data.email());
+                preparedStatement.executeUpdate();
+            }
+        } catch(SQLException e){
+            throw new DataAccessException("Unable to create user: " + e.getMessage());
+        }
     }
 
     @Override
