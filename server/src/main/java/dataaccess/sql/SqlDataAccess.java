@@ -61,7 +61,16 @@ public class SqlDataAccess implements DataAccess {
 
     @Override
     public void clear() throws DataAccessException {
-
+        String[] statements = {"TRUNCATE TABLE userTable", "TRUNCATE TABLE authTable", "TRUNCATE TABLE gameTable"};
+        try(Connection connection = DatabaseManager.getConnection()){
+            for(String statement : statements) {
+                try(PreparedStatement preparedStatement = connection.prepareStatement(statement)){
+                    preparedStatement.executeUpdate();
+                }
+            }
+        } catch(SQLException e){
+            throw new DataAccessException("Clearing the database failed: " + e.getMessage());
+        }
     }
 
     @Override
