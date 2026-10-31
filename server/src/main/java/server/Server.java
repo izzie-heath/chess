@@ -17,7 +17,12 @@ public class Server {
         javalin = Javalin.create(config -> config.staticFiles.add("web"));
 
         // Register your endpoints and exception handlers here.
-        DataAccess data = new SqlDataAccess();
+        DataAccess data;
+        try {
+            data = new SqlDataAccess();
+        } catch (DataAccessException e) {
+            throw new RuntimeException("Unable to set up the database: " + e.getMessage(), e);
+        }
         ClearService clearService = new ClearService(data);
         ClearHandler clearHandler = new ClearHandler(clearService);
         javalin.delete("/db", clearHandler::handle);
