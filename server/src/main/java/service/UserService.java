@@ -48,7 +48,8 @@ public class UserService {
             throw new BadRequestException("Error: bad request");
         }
 
-        if(data.getUser(request.username()) == null || ! BCrypt.checkpw(request.password(), BCrypt.gensalt())){
+        UserData user = data.getUser(request.username());
+        if(user == null || ! BCrypt.checkpw(request.password(), user.password())){
             throw new UnauthorizedException("Error: unauthorized");
         }
 
