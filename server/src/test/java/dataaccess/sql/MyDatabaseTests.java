@@ -1,11 +1,16 @@
 package dataaccess.sql;
+import chess.ChessGame;
 import dataaccess.DataAccessException;
 import dataaccess.sql.SqlDataAccess;
 import model.AuthData;
+import model.GameData;
 import model.UserData;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MyDatabaseTests {
@@ -80,5 +85,52 @@ public class MyDatabaseTests {
         AuthData authData = new AuthData("token", "izzie");
         data.createAuth(authData);
         assertDoesNotThrow(() -> data.deleteAuth("token"));
+    }
+
+    //createGame tests
+    @Test
+    @DisplayName("createGame throws no errors")
+    public void createGameWorks() throws DataAccessException {
+        data = new SqlDataAccess();
+        data.clear();
+        ChessGame game = new ChessGame();
+        GameData gameData = new GameData(1, "izzie", "ozzy", "coolGame", game);
+        assertDoesNotThrow(() -> data.createGame("coolGame"));
+    }
+
+    //listGames tests
+    @Test
+    @DisplayName("listGames throws no errors")
+    public void listGamesWorks() throws DataAccessException {
+        data = new SqlDataAccess();
+        data.clear();
+        ChessGame game = new ChessGame();
+        GameData gameData = new GameData(1, "izzie", "ozzy", "coolGame", game);
+        GameData gameData2 = new GameData(2, "izzie", "ozzy", "coolerGame", game);
+        data.createGame("coolGame");
+        data.createGame("coolerGame");
+        assertDoesNotThrow(() -> data.listGames());
+    }
+
+    //getGame tests
+    @Test
+    @DisplayName("getGame throws no errors")
+    public void getGameWorks() throws DataAccessException {
+        data = new SqlDataAccess();
+        data.clear();
+        ChessGame game = new ChessGame();
+        GameData gameData = new GameData(1, "izzie", "ozzy", "coolGame", game);
+        assertDoesNotThrow(() -> data.getGame(1));
+    }
+
+    //updateGame tests
+    @Test
+    @DisplayName("updateGame throws no errors")
+    public void updateGameWorks() throws DataAccessException {
+        data = new SqlDataAccess();
+        data.clear();
+        ChessGame game = new ChessGame();
+        GameData gameData = new GameData(1, "izzie", "ozzy", "coolGame", game);
+        assertDoesNotThrow(() -> data.updateGame(gameData));
     }
 }
