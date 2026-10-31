@@ -109,17 +109,47 @@ public class SqlDataAccess implements DataAccess {
 
     @Override
     public void createAuth(AuthData data) throws DataAccessException {
-
+        String statement = "INSERT INTO authTable (authToken, username) VALUES (?, ?)";
+        try(Connection connection = DatabaseManager.getConnection()){
+            try(PreparedStatement preparedStatement = connection.prepareStatement(statement)){
+                preparedStatement.setString(1, data.authToken());
+                preparedStatement.setString(2, data.username());
+                preparedStatement.executeUpdate();
+            }
+        } catch(SQLException e){
+            throw new DataAccessException("Unable to create auth: " + e.getMessage());
+        }
     }
 
     @Override
     public AuthData getAuth(String authToken) throws DataAccessException {
+        String statement = "SELECT authToken, username FROM authTable WHERE authToken = ?";
+        try(Connection connection = DatabaseManager.getConnection()){
+            try(PreparedStatement preparedStatement = connection.prepareStatement(statement)){
+                preparedStatement.setString(1, authToken);
+                try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                    if(resultSet.next()){
+                        return new AuthData(resultSet.getString("authToken"), resultSet.getString("username"));
+                    }
+                }
+            }
+        } catch(SQLException e){
+            throw new DataAccessException("Unable to get auth: " + e.getMessage());
+        }
         return null;
     }
 
     @Override
     public void deleteAuth(String authToken) throws DataAccessException {
-
+        String statement = "DELETE FROM authTable WHERE authToken = ?";
+        try(Connection connection = DatabaseManager.getConnection()){
+            try(PreparedStatement preparedStatement = connection.prepareStatement(statement)){
+                preparedStatement.setString(1, authToken);
+                preparedStatement.executeUpdate();
+            }
+        } catch(SQLException e){
+            throw new DataAccessException("Unable to delete auth: " + e.getMessage());
+        }
     }
 
     @Override
