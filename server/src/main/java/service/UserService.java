@@ -4,6 +4,7 @@ import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
 import model.AuthData;
 import model.UserData;
+import org.mindrot.jbcrypt.BCrypt;
 import service.register.AlreadyTakenException;
 import service.register.BadRequestException;
 import service.register.RegisterRequest;
@@ -34,7 +35,8 @@ public class UserService {
             throw new AlreadyTakenException("Error: already taken");
         }
 
-        data.createUser(new UserData(request.username(), request.password(), request.email()));
+        String securePassword = BCrypt.hashpw(request.password(), BCrypt.gensalt());
+        data.createUser(new UserData(request.username(), securePassword, request.email()));
         String authToken = generateToken();
         data.createAuth(new AuthData(authToken, request.username()));
 
@@ -46,7 +48,7 @@ public class UserService {
             throw new BadRequestException("Error: bad request");
         }
 
-        if(data.getUser(request.username()) == null || ! data.getUser(request.username()).password().equals(request.password())){
+        if(data.getUser(request.username()) == null || ! BCrypt.checkpw(request.password(), BCrypt.gensalt())){
             throw new UnauthorizedException("Error: unauthorized");
         }
 
