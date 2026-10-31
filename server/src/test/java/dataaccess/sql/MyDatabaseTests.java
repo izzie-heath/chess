@@ -22,7 +22,6 @@ public class MyDatabaseTests {
     public void clearWorks() throws DataAccessException {
         data = new SqlDataAccess();
         data.clear();
-
         assertDoesNotThrow(() -> data.clear());
     }
 
@@ -64,6 +63,16 @@ public class MyDatabaseTests {
         AuthData authData = new AuthData("token", "izzie");
         assertDoesNotThrow(() -> data.createAuth(authData));
     }
+    @Test
+    @DisplayName("createAuth throws error when given duplicate auth token")
+    public void createAuthDuplicateToken() throws DataAccessException {
+        data = new SqlDataAccess();
+        data.clear();
+        AuthData authData = new AuthData("token", "izzie");
+        AuthData authData2 = new AuthData("token", "ozzy");
+        data.createAuth(authData);
+        assertThrows(DataAccessException.class, () -> data.createAuth(authData2));
+    }
 
     //getAuth tests
     @Test
@@ -79,7 +88,7 @@ public class MyDatabaseTests {
     //deleteAuth tests
     @Test
     @DisplayName("deleteAuth throws no errors")
-    public void deleteAuth() throws DataAccessException {
+    public void deleteAuthWorks() throws DataAccessException {
         data = new SqlDataAccess();
         data.clear();
         AuthData authData = new AuthData("token", "izzie");
@@ -96,6 +105,13 @@ public class MyDatabaseTests {
         ChessGame game = new ChessGame();
         GameData gameData = new GameData(1, "izzie", "ozzy", "coolGame", game);
         assertDoesNotThrow(() -> data.createGame("coolGame"));
+    }
+    @Test
+    @DisplayName("createGame with null gameName throws error")
+    public void createGameNullGameName() throws DataAccessException {
+        data = new SqlDataAccess();
+        data.clear();
+        assertThrows(DataAccessException.class, () -> data.createGame(null));
     }
 
     //listGames tests
@@ -122,6 +138,16 @@ public class MyDatabaseTests {
         GameData gameData = new GameData(1, "izzie", "ozzy", "coolGame", game);
         assertDoesNotThrow(() -> data.getGame(1));
     }
+    @Test
+    @DisplayName("getGame returns the stored game")
+    public void getGameReturnsGame() throws DataAccessException {
+        data = new SqlDataAccess();
+        data.clear();
+        ChessGame game = new ChessGame();
+        GameData gameData = new GameData(1, "izzie", "ozzy", "coolGame", game);
+        assertEquals("coolGame", gameData.gameName());
+        assertEquals(new ChessGame(), gameData.game());
+    }
 
     //updateGame tests
     @Test
@@ -132,5 +158,14 @@ public class MyDatabaseTests {
         ChessGame game = new ChessGame();
         GameData gameData = new GameData(1, "izzie", "ozzy", "coolGame", game);
         assertDoesNotThrow(() -> data.updateGame(gameData));
+    }
+    @Test
+    @DisplayName("updateGame with null gameData throws error")
+    public void updateGameNullGameName() throws DataAccessException {
+        data = new SqlDataAccess();
+        data.clear();
+        int id = data.createGame("coolGame");
+        GameData badGame = new GameData(id, null, null, null, new ChessGame());
+        assertThrows(DataAccessException.class, () -> data.updateGame(badGame));
     }
 }
