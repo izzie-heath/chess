@@ -1,6 +1,9 @@
 package client;
 
 import com.google.gson.Gson;
+import register.RegisterRequest;
+import register.RegisterResult;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -14,6 +17,18 @@ public class ServerFacade {
 
     public ServerFacade(int port){
         serverUrl = "http://localhost:" + port;
+    }
+
+    public RegisterResult register(String username, String password, String email) throws ResponseException {
+        HttpRequest httpRequest = buildRequest("POST", "/user", new RegisterRequest(username, password, email), null);
+        HttpResponse<String> httpResponse = sendRequest(httpRequest);
+        return handleResponse(httpResponse, RegisterResult.class);
+    }
+
+    public void clear() throws ResponseException {
+        HttpRequest httpRequest = buildRequest("DELETE", "/db", null, null);
+        HttpResponse<String> httpResponse = sendRequest(httpRequest);
+        handleResponse(httpResponse, null);
     }
 
     private HttpRequest buildRequest(String method, String path, Object body, String auth){
