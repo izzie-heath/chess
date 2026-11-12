@@ -42,6 +42,8 @@ public class ChessClient {
             case "quit" -> "quit";
             case "login" -> login(params);
             case "register" -> register(params);
+            case "logout" -> logout();
+            case "create" -> create(params);
             default -> help();
         };
     }
@@ -100,4 +102,32 @@ public class ChessClient {
             return "Login failed: " + e.getMessage() + "\n";
         }
     }
+
+    private String logout(){
+        if(state == State.SIGNEDOUT){
+            return "Error: You're not logged in!\n";
+        }
+        try{
+            server.logout(authToken);
+            authToken = null;
+            state = State.SIGNEDOUT;
+            return "Logged out.\n";
+        } catch (ResponseException e){
+            return "Logout failed: " + e.getMessage() + "\n";
+        }
+    }
+
+    private String create(String[] params){
+        if(state == State.SIGNEDOUT){
+            return "Error: You're not logged in!\n";
+        }
+        try{
+            server.createGame(authToken, params[0]);
+            return "Created game '" + params[0] + "'.\n";
+        } catch (ResponseException e){
+            return "Create game failed: " + e.getMessage() + "\n";
+        }
+    }
+
+
 }
