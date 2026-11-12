@@ -7,10 +7,13 @@ import com.google.gson.Gson;
 import model.*;
 import client.ResponseException;
 import client.ServerFacade;
+import register.RegisterResult;
+import service.login.LoginResult;
 
 public class ChessClient {
     private final ServerFacade server;
     private State state = State.SIGNEDOUT;
+    private String authToken = null;
 
     public ChessClient(int port) throws ResponseException{
         server = new ServerFacade(port);
@@ -37,6 +40,8 @@ public class ChessClient {
         String[] params = Arrays.copyOfRange(tokens, 1, tokens.length);
         return switch (cmd){
             case "quit" -> "quit";
+            case "login" -> login(params);
+            case "register" -> register(params);
             default -> help();
         };
     }
@@ -59,6 +64,40 @@ public class ChessClient {
                    quit - playing chess
                    help - with possible commands
                    """;
+        }
+    }
+
+    private String register(String[] params){
+        if(state != State.SIGNEDOUT){
+            return "Error: You're already logged in!\n";
+        }
+        if(params.length != 3){
+            return "Error: Register takes 3 arguments (register <USERNAME> <PASSWORD> <EMAIL>).\n";
+        }
+        try{
+            RegisterResult registerResult = server.register(params[0], params[1], params[2]);
+            authToken = registerResult.authToken();
+            state = State.SIGNEDIN;
+            return "Registered and logged in as " + registerResult.username() + ".\n";
+        } catch (ResponseException e){
+            return "Registration failed: " + e.getMessage() + "\n";
+        }
+    }
+
+    private String login(String[] params){
+        if(state != State.SIGNEDOUT){
+            return "Error: You're already logged in!\n";
+        }
+        if(params.length != 2){
+            return "Error: Login takes 2 arguments (login <USERNAME> <PASSWORD>).\n";
+        }
+        try{
+            LoginResult loginResult = server.login(params[0], params[1]);
+            authToken = loginResult.authToken();
+            state = State.SIGNEDIN;
+            return "Logged in as " + loginResult.username() + ".\n";
+        } catch (ResponseException e){
+            return "Login failed: " + e.getMessage() + "\n";
         }
     }
 }
