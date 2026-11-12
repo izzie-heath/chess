@@ -3,6 +3,7 @@ package client;
 import org.junit.jupiter.api.*;
 import register.RegisterResult;
 import server.Server;
+import service.login.LoginResult;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -42,5 +43,24 @@ public class ServerFacadeTests {
         RegisterResult registerResult = serverFacade.register("izzie", "coolpassword", "izzieh@byu.edu");
         assertNotNull(registerResult.authToken());
         assertTrue(registerResult.authToken().length() > 10);
+    }
+
+    //login tests
+    @Test
+    @DisplayName("Login returns auth token")
+    public void loginWorks() throws Exception {
+        RegisterResult registerResult = serverFacade.register("izzie", "coolpassword", "izzieh@byu.edu");
+        LoginResult loginResult = serverFacade.login("izzie", "coolpassword");
+        assertNotNull(loginResult.authToken());
+        assertEquals("izzie", loginResult.username());
+    }
+
+    //logout tests
+    @Test
+    @DisplayName("Logout works when given correct auth token")
+    public void logoutWorks() throws Exception {
+        RegisterResult registerResult = serverFacade.register("izzie", "coolpassword", "izzieh@byu.edu");
+        LoginResult loginResult = serverFacade.login("izzie", "coolpassword");
+        assertDoesNotThrow(() -> serverFacade.logout(registerResult.authToken()));
     }
 }
