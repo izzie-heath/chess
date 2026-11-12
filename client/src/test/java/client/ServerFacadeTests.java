@@ -3,6 +3,7 @@ package client;
 import org.junit.jupiter.api.*;
 import register.RegisterResult;
 import server.Server;
+import service.creategame.CreateGameResult;
 import service.login.LoginResult;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -62,5 +63,30 @@ public class ServerFacadeTests {
         RegisterResult registerResult = serverFacade.register("izzie", "coolpassword", "izzieh@byu.edu");
         LoginResult loginResult = serverFacade.login("izzie", "coolpassword");
         assertDoesNotThrow(() -> serverFacade.logout(registerResult.authToken()));
+    }
+
+    //createGame
+    @Test
+    @DisplayName("createGame creates a game")
+    public void createGameWorks() throws Exception {
+        RegisterResult registerResult = serverFacade.register("izzie", "coolpassword", "izzieh@byu.edu");
+        CreateGameResult game = serverFacade.createGame(registerResult.authToken(), "hi");
+        assertNotNull(game);
+    }
+
+    //listGames
+    @Test
+    @DisplayName("listGames lists all games")
+    public void listGameWorks() throws Exception {
+        RegisterResult registerResult = serverFacade.register("izzie", "coolpassword", "izzieh@byu.edu");
+        CreateGameResult game = serverFacade.createGame(registerResult.authToken(), "hi");
+        assertNotNull(serverFacade.listGames(registerResult.authToken()));
+    }
+
+    //joinGame
+    @Test
+    @DisplayName("joinGame throws error when null")
+    public void joinGameNull() throws Exception {
+        assertThrows(ResponseException.class, () -> serverFacade.joinGame(null, null, null));
     }
 }

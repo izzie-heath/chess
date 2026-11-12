@@ -3,6 +3,10 @@ package client;
 import com.google.gson.Gson;
 import register.RegisterRequest;
 import register.RegisterResult;
+import service.creategame.CreateGameRequest;
+import service.creategame.CreateGameResult;
+import service.joingame.JoinGameRequest;
+import service.listgames.ListGamesResult;
 import service.login.LoginRequest;
 import service.login.LoginResult;
 
@@ -41,6 +45,24 @@ public class ServerFacade {
 
     public void logout(String authToken) throws ResponseException {
         HttpRequest httpRequest = buildRequest("DELETE", "/session", null, authToken);
+        HttpResponse<String> httpResponse = sendRequest(httpRequest);
+        handleResponse(httpResponse, null);
+    }
+
+    public CreateGameResult createGame(String authToken, String gameName) throws ResponseException {
+        HttpRequest httpRequest = buildRequest("POST", "/game", new CreateGameRequest(gameName), authToken);
+        HttpResponse<String> httpResponse = sendRequest(httpRequest);
+        return handleResponse(httpResponse, CreateGameResult.class);
+    }
+
+    public ListGamesResult listGames(String authToken) throws ResponseException {
+        HttpRequest httpRequest = buildRequest("GET", "/game", null, authToken);
+        HttpResponse<String> httpResponse = sendRequest(httpRequest);
+        return handleResponse(httpResponse, ListGamesResult.class);
+    }
+
+    public void joinGame(String authToken, Integer gameID, String playerColor) throws ResponseException {
+        HttpRequest httpRequest = buildRequest("PUT", "/game", new JoinGameRequest(gameID, playerColor), authToken);
         HttpResponse<String> httpResponse = sendRequest(httpRequest);
         handleResponse(httpResponse, null);
     }
