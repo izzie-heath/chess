@@ -6,8 +6,8 @@ import service.UserService;
 import dataaccess.DataAccessException;
 import service.register.AlreadyTakenException;
 import service.register.BadRequestException;
-import service.register.RegisterRequest;
-import service.register.RegisterResult;
+import register.RegisterRequest;
+import register.RegisterResult;
 
 public class RegisterHandler {
     UserService service;

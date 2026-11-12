@@ -13,8 +13,8 @@ import service.login.LoginResult;
 import service.login.UnauthorizedException;
 import service.register.AlreadyTakenException;
 import service.register.BadRequestException;
-import service.register.RegisterRequest;
-import service.register.RegisterResult;
+import register.RegisterRequest;
+import register.RegisterResult;
 
 public class MyTests {
     //clear tests
