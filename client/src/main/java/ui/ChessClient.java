@@ -46,6 +46,7 @@ public class ChessClient {
             case "create" -> create(params);
             case "list" -> list();
             case "play" -> play(params);
+            case "observe" -> observe(params);
             default -> help();
         };
     }
@@ -179,5 +180,23 @@ public class ChessClient {
         } catch(ResponseException e) {
             return "Play game failed: " + e.getMessage() + "\n";
         }
+    }
+
+    private String observe(String[] params){
+        if(state == State.SIGNEDOUT){
+            return "Error: You're not logged in!\n";
+        }
+        if(params.length != 1){
+            return "Error: Observe takes 1 argument (observe <NUMBER>).\n";
+        }
+        try{
+            int gameNumber = Integer.parseInt(params[0]);
+            if(gameNumber < 1 || gameNumber > gameList.size()){
+                return "Error: That game does not exist.\n";
+            }
+        } catch(NumberFormatException e) {
+            return "Error: Please enter a game number.\n";
+        }
+        return "Placeholder.\n";
     }
 }
