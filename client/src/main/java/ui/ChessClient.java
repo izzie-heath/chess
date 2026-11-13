@@ -45,6 +45,7 @@ public class ChessClient {
             case "logout" -> logout();
             case "create" -> create(params);
             case "list" -> list();
+            case "play" -> play(params);
             default -> help();
         };
     }
@@ -143,13 +144,40 @@ public class ChessClient {
                 String str = "";
                 for(int i=0; i<gameList.size(); i++){
                     int num = i+1;
-                    str += "" + num + ". " + gameList.get(i).gameName()
+                    str += num + ". " + gameList.get(i).gameName()
                             + "   White: " + gameList.get(i).whiteUsername() + "   Black: " + gameList.get(i).blackUsername() + "\n";
                 }
                 return str;
             }
         } catch (ResponseException e){
             return "List games failed: " + e.getMessage() + "\n";
+        }
+    }
+
+    private String play(String[] params){
+        if(state == State.SIGNEDOUT){
+            return "Error: You're not logged in!\n";
+        }
+        if(params.length != 2){
+            return "Error: Play takes 2 arguments (play <NUMBER> <WHITE|BLACK>).\n";
+        }
+        try{
+            int gameNumber = Integer.parseInt(params[0]);
+            if(gameNumber < 1 || gameNumber > gameList.size()){
+                return "Error: That game does not exist.\n";
+            }
+        } catch(NumberFormatException e) {
+            return "Error: Please enter a game number.\n";
+        }
+        if(!params[1].toUpperCase().equals("WHITE") && !params[1].toUpperCase().equals("BLACK")){
+            return "Error: Color must be white or black\n";
+        }
+        GameData game = gameList.get(Integer.parseInt(params[0]) - 1);
+        try {
+            server.joinGame(authToken, game.gameID(), params[1].toUpperCase());
+            return "Placeholder\n";
+        } catch(ResponseException e) {
+            return "Play game failed: " + e.getMessage() + "\n";
         }
     }
 }
