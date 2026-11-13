@@ -1,19 +1,19 @@
 package ui;
 
-import java.util.Arrays;
-import java.util.Locale;
-import java.util.Scanner;
 import com.google.gson.Gson;
 import model.*;
 import client.ResponseException;
 import client.ServerFacade;
 import register.RegisterResult;
+import service.listgames.ListGamesResult;
 import service.login.LoginResult;
+import java.util.*;
 
 public class ChessClient {
     private final ServerFacade server;
     private State state = State.SIGNEDOUT;
     private String authToken = null;
+    private List<GameData> gameList = new ArrayList<>();
 
     public ChessClient(int port) throws ResponseException{
         server = new ServerFacade(port);
@@ -44,6 +44,7 @@ public class ChessClient {
             case "register" -> register(params);
             case "logout" -> logout();
             case "create" -> create(params);
+            case "list" -> list();
             default -> help();
         };
     }
@@ -129,5 +130,26 @@ public class ChessClient {
         }
     }
 
-
+    private String list(){
+        if(state == State.SIGNEDOUT){
+            return "Error: You're not logged in!\n";
+        }
+        try{
+            ListGamesResult listGamesResult = server.listGames(authToken);
+            gameList = new ArrayList<>(listGamesResult.games());
+            if(gameList.isEmpty()){
+                return "No games created yet.";
+            } else {
+                String str = "";
+                for(int i=0; i<gameList.size(); i++){
+                    int num = i+1;
+                    str += "" + num + ". " + gameList.get(i).gameName()
+                            + "   White: " + gameList.get(i).whiteUsername() + "   Black: " + gameList.get(i).blackUsername() + "\n";
+                }
+                return str;
+            }
+        } catch (ResponseException e){
+            return "List games failed: " + e.getMessage() + "\n";
+        }
+    }
 }
