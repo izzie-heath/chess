@@ -1,6 +1,5 @@
 package ui;
 
-import com.google.gson.Gson;
 import model.*;
 import client.ResponseException;
 import client.ServerFacade;
