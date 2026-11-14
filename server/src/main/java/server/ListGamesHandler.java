@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import io.javalin.http.Context;
 import service.GameService;
 import dataaccess.DataAccessException;
-import service.listgames.ListGamesResult;
+import chess.listgames.ListGamesResult;
 import service.login.UnauthorizedException;
 
 public class ListGamesHandler {

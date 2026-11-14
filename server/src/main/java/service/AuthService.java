@@ -2,7 +2,7 @@ package service;
 
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
-import model.AuthData;
+import chess.model.AuthData;
 import service.login.UnauthorizedException;
 
 public class AuthService {

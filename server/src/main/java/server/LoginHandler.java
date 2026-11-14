@@ -4,10 +4,10 @@ import com.google.gson.Gson;
 import io.javalin.http.Context;
 import service.UserService;
 import dataaccess.DataAccessException;
-import service.login.LoginRequest;
+import login.LoginRequest;
 import service.login.UnauthorizedException;
 import service.register.BadRequestException;
-import service.login.LoginResult;
+import login.LoginResult;
 
 public class LoginHandler {
     UserService service;

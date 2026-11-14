@@ -1,13 +1,9 @@
 package server;
 
-import com.google.gson.Gson;
 import io.javalin.http.Context;
 import service.UserService;
 import dataaccess.DataAccessException;
-import service.login.LoginRequest;
 import service.login.UnauthorizedException;
-import service.register.BadRequestException;
-import service.login.LoginResult;
 
 public class LogoutHandler {
     UserService service;

@@ -1,4 +1,4 @@
-package service.listgames;
+package chess.listgames;
 
 import model.GameData;
 

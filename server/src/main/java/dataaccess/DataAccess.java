@@ -1,11 +1,9 @@
 package dataaccess;
 
-import model.AuthData;
-import model.GameData;
-import model.UserData;
-import service.login.UnauthorizedException;
+import chess.model.AuthData;
+import chess.model.GameData;
+import chess.model.UserData;
 
-import javax.xml.crypto.Data;
 import java.util.Collection;
 
 public interface DataAccess {

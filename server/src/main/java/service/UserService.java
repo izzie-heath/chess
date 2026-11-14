@@ -2,16 +2,16 @@ package service;
 
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
-import model.AuthData;
-import model.UserData;
+import chess.model.AuthData;
+import chess.model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 import service.register.AlreadyTakenException;
 import service.register.BadRequestException;
 import register.RegisterRequest;
 import register.RegisterResult;
 import java.util.UUID;
-import service.login.LoginRequest;
-import service.login.LoginResult;
+import login.LoginRequest;
+import login.LoginResult;
 import service.login.UnauthorizedException;
 
 public class UserService {

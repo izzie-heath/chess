@@ -1,11 +1,10 @@
 package dataaccess;
 
 import chess.ChessGame;
-import model.AuthData;
-import model.UserData;
-import model.GameData;
+import chess.model.AuthData;
+import chess.model.UserData;
+import chess.model.GameData;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 

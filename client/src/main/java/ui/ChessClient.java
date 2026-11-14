@@ -2,14 +2,13 @@ package ui;
 
 import chess.ChessBoard;
 import chess.ChessGame;
-import model.*;
+import chess.model.GameData;
 import client.ResponseException;
 import client.ServerFacade;
 import register.RegisterResult;
-import service.listgames.ListGamesResult;
-import service.login.LoginResult;
+import chess.listgames.ListGamesResult;
+import login.LoginResult;
 import java.util.*;
-import ui.BoardDrawer;
 
 public class ChessClient {
     private final ServerFacade server;

@@ -1,19 +1,19 @@
 package service;
 
+import chess.listgames.ListGamesResult;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
-import model.AuthData;
-import model.GameData;
-import service.creategame.CreateGameRequest;
-import service.creategame.CreateGameResult;
-import service.joingame.JoinGameRequest;
+import chess.model.AuthData;
+import chess.model.GameData;
+import creategame.CreateGameRequest;
+import creategame.CreateGameResult;
+import chess.joingame.JoinGameRequest;
 import service.register.AlreadyTakenException;
 import service.register.BadRequestException;
 
 import java.util.Collection;
 
 import service.login.UnauthorizedException;
-import service.listgames.*;
 
 public class GameService {
     DataAccess data;

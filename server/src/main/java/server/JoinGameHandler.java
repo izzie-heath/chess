@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import io.javalin.http.Context;
 import service.GameService;
 import dataaccess.DataAccessException;
-import service.joingame.JoinGameRequest;
+import chess.joingame.JoinGameRequest;
 import service.login.UnauthorizedException;
 import service.register.AlreadyTakenException;
 import service.register.BadRequestException;

@@ -3,12 +3,12 @@ package client;
 import com.google.gson.Gson;
 import register.RegisterRequest;
 import register.RegisterResult;
-import service.creategame.CreateGameRequest;
-import service.creategame.CreateGameResult;
-import service.joingame.JoinGameRequest;
-import service.listgames.ListGamesResult;
-import service.login.LoginRequest;
-import service.login.LoginResult;
+import creategame.CreateGameRequest;
+import creategame.CreateGameResult;
+import chess.joingame.JoinGameRequest;
+import chess.listgames.ListGamesResult;
+import login.LoginRequest;
+import login.LoginResult;
 
 import java.net.URI;
 import java.net.http.HttpClient;

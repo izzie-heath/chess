@@ -3,8 +3,8 @@ package client;
 import org.junit.jupiter.api.*;
 import register.RegisterResult;
 import server.Server;
-import service.creategame.CreateGameResult;
-import service.login.LoginResult;
+import creategame.CreateGameResult;
+import login.LoginResult;
 
 import static org.junit.jupiter.api.Assertions.*;
 

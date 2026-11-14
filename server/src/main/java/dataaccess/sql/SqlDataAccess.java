@@ -5,9 +5,9 @@ import com.google.gson.Gson;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;
-import model.AuthData;
-import model.GameData;
-import model.UserData;
+import chess.model.AuthData;
+import chess.model.GameData;
+import chess.model.UserData;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -15,7 +15,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 public class SqlDataAccess implements DataAccess {
     private final String[] createStatements = {
