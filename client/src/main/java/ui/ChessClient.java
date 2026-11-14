@@ -1,5 +1,7 @@
 package ui;
 
+import chess.ChessBoard;
+import chess.ChessGame;
 import model.*;
 import client.ResponseException;
 import client.ServerFacade;
@@ -7,6 +9,7 @@ import register.RegisterResult;
 import service.listgames.ListGamesResult;
 import service.login.LoginResult;
 import java.util.*;
+import ui.BoardDrawer;
 
 public class ChessClient {
     private final ServerFacade server;
@@ -175,10 +178,10 @@ public class ChessClient {
         GameData game = gameList.get(Integer.parseInt(params[0]) - 1);
         try {
             server.joinGame(authToken, game.gameID(), params[1].toUpperCase());
-            return "Placeholder\n";
         } catch(ResponseException e) {
             return "Play game failed: " + e.getMessage() + "\n";
         }
+        return "Placeholder.";
     }
 
     private String observe(String[] params){
