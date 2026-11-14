@@ -178,27 +178,33 @@ public class ChessClient {
         GameData game = gameList.get(Integer.parseInt(params[0]) - 1);
         try {
             server.joinGame(authToken, game.gameID(), params[1].toUpperCase());
+            ChessBoard board = new ChessBoard();
+            board.resetBoard();
+            return BoardDrawer.draw(board, ChessGame.TeamColor.valueOf(params[1].toUpperCase()));
         } catch(ResponseException e) {
             return "Play game failed: " + e.getMessage() + "\n";
         }
-        return "Placeholder.";
     }
 
-    private String observe(String[] params){
-        if(state == State.SIGNEDOUT){
+    private String observe(String[] params) {
+        if (state == State.SIGNEDOUT) {
             return "Error: You're not logged in!\n";
         }
-        if(params.length != 1){
+        if (params.length != 1) {
             return "Error: Observe takes 1 argument (observe <NUMBER>).\n";
         }
-        try{
-            int gameNumber = Integer.parseInt(params[0]);
-            if(gameNumber < 1 || gameNumber > gameList.size()){
-                return "Error: That game does not exist.\n";
-            }
-        } catch(NumberFormatException e) {
+        int gameNumber;
+        try {
+            gameNumber = Integer.parseInt(params[0]);
+        } catch (NumberFormatException e) {
             return "Error: Please enter a game number.\n";
         }
-        return "Placeholder.\n";
+        if (gameNumber < 1 || gameNumber > gameList.size()) {
+            return "Error: That game does not exist.\n";
+        }
+        GameData game = gameList.get(gameNumber - 1);
+        ChessBoard board = new ChessBoard();
+        board.resetBoard();
+        return BoardDrawer.draw(board, ChessGame.TeamColor.WHITE);
     }
 }
