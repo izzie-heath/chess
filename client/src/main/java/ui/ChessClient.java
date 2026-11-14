@@ -2,7 +2,7 @@ package ui;
 
 import chess.ChessBoard;
 import chess.ChessGame;
-import chess.model.GameData;
+import model.GameData;
 import client.ResponseException;
 import client.ServerFacade;
 import register.RegisterResult;

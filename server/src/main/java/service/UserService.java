@@ -2,8 +2,8 @@ package service;
 
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
-import chess.model.AuthData;
-import chess.model.UserData;
+import model.AuthData;
+import model.UserData;
 import org.mindrot.jbcrypt.BCrypt;
 import service.register.AlreadyTakenException;
 import service.register.BadRequestException;

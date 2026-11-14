@@ -1,8 +1,8 @@
 package dataaccess;
 
-import chess.model.AuthData;
-import chess.model.GameData;
-import chess.model.UserData;
+import model.AuthData;
+import model.GameData;
+import model.UserData;
 
 import java.util.Collection;
 

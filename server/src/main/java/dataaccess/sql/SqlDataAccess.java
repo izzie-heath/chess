@@ -5,9 +5,9 @@ import com.google.gson.Gson;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessException;
 import dataaccess.DatabaseManager;
-import chess.model.AuthData;
-import chess.model.GameData;
-import chess.model.UserData;
+import model.AuthData;
+import model.GameData;
+import model.UserData;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

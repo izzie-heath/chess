@@ -1,9 +1,9 @@
 package dataaccess.sql;
 import chess.ChessGame;
 import dataaccess.DataAccessException;
-import chess.model.AuthData;
-import chess.model.GameData;
-import chess.model.UserData;
+import model.AuthData;
+import model.GameData;
+import model.UserData;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
